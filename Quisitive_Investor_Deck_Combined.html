@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quisitive Group · Investor Deck · April 2026</title>
+<style>
+  :root {
+    --bg: #0D1B2A; --bg-alt: #142234; --bg-card: #1A2B42; --bg-deep: #081320;
+    --card-line: #1B2A3E;
+    --teal: #2EC4B6; --teal-dark: #1A8E84;
+    --orange: #FF6B35; --yellow: #F4B942; --green: #52B788; --red: #E85D4F; --purple: #8B7FD8;
+    --text: #FFFFFF; --text-mute: #B8C4D4; --text-dim: #7E8C9F; --text-body: #D6DEE8;
+    --rule: rgba(46, 196, 182, 0.3);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: var(--bg); color: var(--text-body);
+    font-family: 'Calibri','Helvetica Neue',Arial,sans-serif;
+    font-size: 16px; line-height: 1.45;
+    -webkit-font-smoothing: antialiased;
+    cursor: pointer; user-select: none;
+  }
+  ::selection { background: rgba(46, 196, 182, 0.3); color: var(--text); }
+
+  .deck { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+  .slide {
+    position: absolute; inset: 0;
+    padding: 5vh 5vw 9vh 5vw;
+    display: flex; flex-direction: column;
+    opacity: 0; visibility: hidden;
+    transform: translateX(40px);
+    transition: opacity 0.36s ease-out, transform 0.36s ease-out, visibility 0s linear 0.36s;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1; visibility: visible; transform: translateX(0);
+    transition: opacity 0.36s ease-out, transform 0.36s ease-out, visibility 0s;
+  }
+  .slide-inner {
+    max-width: 1280px; width: 100%; margin: 0 auto;
+    flex: 1; display: flex; flex-direction: column;
+  }
+
+  .controls {
+    position: fixed; bottom: 1.4vh; left: 50%;
+    transform: translateX(-50%); z-index: 100;
+    display: flex; align-items: center; gap: 0.9rem;
+    background: rgba(20, 34, 52, 0.85); backdrop-filter: blur(10px);
+    padding: 0.55rem 1.2rem; border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.08);
+    font-size: 0.78rem; color: var(--text-mute);
+  }
+  .controls button {
+    background: transparent; border: none;
+    color: var(--text-mute); font-size: 0.95rem;
+    cursor: pointer; padding: 0.3rem 0.55rem; border-radius: 4px;
+    transition: all 0.15s;
+  }
+  .controls button:hover { color: var(--teal); background: rgba(46,196,182,0.1); }
+  .slide-counter { font-family: 'Consolas',monospace; font-weight: 600; letter-spacing: 0.06em; }
+  .slide-counter .cur { color: var(--teal); }
+  .slide-counter .total { color: var(--text-dim); }
+  .kb-hint { font-size: 0.65rem; color: var(--text-dim); letter-spacing: 0.15em; text-transform: uppercase; margin-left: 0.8rem; }
+
+  .progress {
+    position: fixed; top: 0; left: 0; right: 0; height: 2px;
+    background: rgba(255,255,255,0.04); z-index: 101;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--teal), var(--orange));
+    transition: width 0.32s ease-out;
+  }
+
+  .corner-brand {
+    position: fixed; top: 1.4rem; left: 1.6rem; z-index: 90;
+    display: flex; align-items: center; gap: 0.55rem;
+    font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase;
+    font-weight: 700; color: var(--text-dim);
+  }
+  .corner-brand .dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--teal);
+    box-shadow: 0 0 10px var(--teal);
+  }
+
+  .slide-tag {
+    font-size: 0.7rem; letter-spacing: 0.25em; font-weight: 700;
+    text-transform: uppercase; color: var(--teal);
+    margin-bottom: 0.9rem;
+    display: inline-flex; align-items: center; gap: 0.55rem;
+  }
+  .slide-tag::before { content: ''; width: 28px; height: 1px; background: var(--teal); }
+  .slide-tag.orange { color: var(--orange); } .slide-tag.orange::before { background: var(--orange); }
+  .slide-tag.yellow { color: var(--yellow); } .slide-tag.yellow::before { background: var(--yellow); }
+  .slide-tag.green { color: var(--green); } .slide-tag.green::before { background: var(--green); }
+  .slide-tag.purple { color: var(--purple); } .slide-tag.purple::before { background: var(--purple); }
+  .slide-tag.red { color: var(--red); } .slide-tag.red::before { background: var(--red); }
+
+  .slide-title {
+    font-size: clamp(1.8rem, 3.1vw, 2.5rem);
+    line-height: 1.1; letter-spacing: -0.02em;
+    font-weight: 700; color: var(--text);
+    margin-bottom: 0.7rem; max-width: 1100px;
+  }
+  .slide-title .tl-teal { color: var(--teal); }
+  .slide-title .tl-orange { color: var(--orange); }
+  .slide-title .tl-yellow { color: var(--yellow); }
+  .slide-title .tl-green { color: var(--green); }
+  .slide-title .tl-purple { color: var(--purple); }
+  .cover-title .tl-teal { color: var(--teal); }
+  .cover-title .tl-orange { color: var(--orange); }
+  .cover-title .tl-yellow { color: var(--yellow); }
+
+  .slide-subtitle {
+    font-size: clamp(0.92rem, 1.1vw, 1.05rem);
+    color: var(--text-mute); font-style: italic;
+    max-width: 920px; margin-bottom: 1.5rem; line-height: 1.5;
+  }
+
+  .card {
+    background: var(--bg-alt);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-left: 3px solid var(--teal);
+    border-radius: 6px; padding: 1.1rem 1.2rem;
+  }
+  .card.orange { border-left-color: var(--orange); }
+  .card.yellow { border-left-color: var(--yellow); }
+  .card.green { border-left-color: var(--green); }
+  .card.red { border-left-color: var(--red); }
+  .card.purple { border-left-color: var(--purple); }
+  .card-label {
+    font-size: 0.63rem; font-weight: 700; letter-spacing: 0.22em;
+    color: var(--teal); text-transform: uppercase; margin-bottom: 0.45rem;
+  }
+  .card.orange .card-label { color: var(--orange); }
+  .card.yellow .card-label { color: var(--yellow); }
+  .card.green .card-label { color: var(--green); }
+  .card.red .card-label { color: var(--red); }
+  .card.purple .card-label { color: var(--purple); }
+  .card-title {
+    font-size: 0.98rem; font-weight: 700; color: var(--text);
+    margin-bottom: 0.35rem; line-height: 1.25;
+  }
+  .card-body {
+    font-size: 0.8rem; color: var(--text-body); line-height: 1.45;
+  }
+  .card-body strong { color: var(--text); }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.85rem; }
+
+  .bigstat {
+    text-align: center; padding: 1rem 0.85rem;
+    background: var(--bg-alt);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px; border-top: 3px solid var(--teal);
+  }
+  .bigstat.orange { border-top-color: var(--orange); }
+  .bigstat.yellow { border-top-color: var(--yellow); }
+  .bigstat.green { border-top-color: var(--green); }
+  .bigstat.red { border-top-color: var(--red); }
+  .bigstat.purple { border-top-color: var(--purple); }
+  .bigstat-val {
+    font-size: clamp(1.5rem, 2.3vw, 2rem);
+    font-weight: 700; color: var(--text); line-height: 1;
+  }
+  .bigstat-val.teal { color: var(--teal); }
+  .bigstat-val.orange { color: var(--orange); }
+  .bigstat-val.yellow { color: var(--yellow); }
+  .bigstat-val.green { color: var(--green); }
+  .bigstat-val.red { color: var(--red); }
+  .bigstat-val.purple { color: var(--purple); }
+  .bigstat-lbl {
+    font-size: 0.65rem; letter-spacing: 0.18em;
+    font-weight: 700; text-transform: uppercase;
+    color: var(--text-dim); margin-top: 0.5rem;
+  }
+  .bigstat-sub {
+    font-size: 0.76rem; color: var(--text-mute);
+    margin-top: 0.3rem; line-height: 1.3;
+  }
+
+  .ftable {
+    width: 100%; border-collapse: collapse; font-size: 0.82rem;
+    background: var(--bg-alt);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px; overflow: hidden;
+  }
+  .ftable th {
+    background: var(--bg-card); padding: 0.7rem 0.85rem;
+    text-align: left; font-size: 0.64rem;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    font-weight: 700; color: var(--teal);
+    border-bottom: 1px solid var(--rule);
+  }
+  .ftable td {
+    padding: 0.6rem 0.85rem; color: var(--text-body);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .ftable tr:last-child td { border-bottom: none; }
+  .ftable td.emph { color: var(--text); font-weight: 600; }
+  .ftable td.teal { color: var(--teal); font-weight: 700; }
+  .ftable td.orange { color: var(--orange); font-weight: 700; }
+  .ftable td.green { color: var(--green); font-weight: 700; }
+  .ftable td.red { color: var(--red); font-weight: 700; }
+  .ftable td.yellow { color: var(--yellow); font-weight: 700; }
+  .ftable td.num { text-align: right; font-family: 'Consolas',monospace; }
+  .ftable tr.total td { background: rgba(46, 196, 182, 0.06); font-weight: 700; border-top: 1px solid var(--teal); }
+
+  .pill {
+    display: inline-block; padding: 0.18rem 0.5rem;
+    font-size: 0.68rem; font-weight: 600;
+    background: rgba(46, 196, 182, 0.12); color: var(--teal);
+    border-radius: 4px; letter-spacing: 0.03em;
+  }
+  .pill.orange { background: rgba(255,107,53,0.12); color: var(--orange); }
+  .pill.yellow { background: rgba(244,185,66,0.12); color: var(--yellow); }
+  .pill.green { background: rgba(82,183,136,0.12); color: var(--green); }
+  .pill.red { background: rgba(232,93,79,0.12); color: var(--red); }
+
+  .insight {
+    background: rgba(46,196,182,0.07);
+    border-left: 3px solid var(--teal);
+    padding: 0.75rem 1rem; margin: 0.8rem 0;
+    border-radius: 3px; font-size: 0.85rem;
+    color: var(--text-body); line-height: 1.5;
+  }
+  .insight.orange { background: rgba(255,107,53,0.07); border-left-color: var(--orange); }
+  .insight.yellow { background: rgba(244,185,66,0.07); border-left-color: var(--yellow); }
+  .insight.green { background: rgba(82,183,136,0.07); border-left-color: var(--green); }
+  .insight strong { color: var(--teal); }
+  .insight.orange strong { color: var(--orange); }
+  .insight.yellow strong { color: var(--yellow); }
+  .insight.green strong { color: var(--green); }
+
+  .punchline {
+    background: linear-gradient(135deg, rgba(46,196,182,0.08) 0%, rgba(255,107,53,0.06) 100%);
+    border: 1px solid rgba(46,196,182,0.25);
+    border-radius: 10px; padding: 1.3rem 1.6rem; margin-top: 0.9rem;
+  }
+  .punchline-val {
+    font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+    font-weight: 700; color: var(--text); line-height: 1.25; margin-bottom: 0.3rem;
+  }
+  .punchline-val .hi { color: var(--teal); }
+  .punchline-sub { font-size: 0.85rem; color: var(--text-mute); font-style: italic; }
+
+  .cover-wrap {
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: flex-start;
+    height: 100%;
+  }
+  .cover-logo { display: flex; align-items: center; gap: 0.7rem; margin-bottom: 2rem; }
+  .cover-logo-badge {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, var(--teal), var(--orange));
+    border-radius: 10px; display: grid; place-items: center;
+    color: var(--bg); font-weight: 800; font-size: 1.5rem;
+  }
+  .cover-logo-text .name {
+    font-size: 1.2rem; font-weight: 700; color: var(--text); line-height: 1;
+  }
+  .cover-logo-text .tag {
+    font-size: 0.7rem; letter-spacing: 0.22em; font-weight: 700;
+    color: var(--text-dim); text-transform: uppercase; margin-top: 0.3rem;
+  }
+  .cover-title {
+    font-size: clamp(2.2rem, 5.5vw, 4rem);
+    font-weight: 700; color: var(--text);
+    line-height: 1.02; letter-spacing: -0.025em;
+    max-width: 1100px; margin-bottom: 1.3rem;
+  }
+  .cover-sub {
+    font-size: clamp(1rem, 1.3vw, 1.2rem);
+    color: var(--text-mute); font-style: italic;
+    max-width: 780px; line-height: 1.5; margin-bottom: 2.2rem;
+  }
+  .cover-footer {
+    display: flex; gap: 1.8rem; flex-wrap: wrap;
+    font-size: 0.75rem; letter-spacing: 0.14em;
+    text-transform: uppercase; font-weight: 700;
+    color: var(--text-dim); padding-top: 1.3rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    margin-top: auto; width: 100%;
+  }
+  .cover-footer span { color: var(--teal); }
+
+  @media (max-width: 900px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="progress"><div class="progress-fill" id="progFill"></div></div>
+
+<div class="corner-brand">
+  <span class="dot"></span>
+  <span>Quisitive Group &middot; Investor Deck &middot; April 2026</span>
+</div>
+
+<div class="deck" id="deck">
+
+<!-- SLIDE 01 · COVER -->
+<section class="slide active" data-slide="1">
+  <div class="cover-wrap">
+    <div class="cover-logo">
+      <div class="cover-logo-badge">Q</div>
+      <div class="cover-logo-text">
+        <div class="name">Quisitive Group</div>
+        <div class="tag">Noida &middot; India</div>
+      </div>
+    </div>
+    <h1 class="cover-title">
+      Computational <span class="tl-teal">discovery</span>,<br>
+      AI-native <span class="tl-orange">cybersecurity</span>,<br>
+      managed <span class="tl-yellow">cloud &amp; security</span>.
+    </h1>
+    <p class="cover-sub">
+      Three specialist technology verticals on enterprise HPC infrastructure.
+      Rs 26 Cr seed fundraise across 24 months. Year 3 target:
+      Rs 20.3 Cr revenue, positive EBITDA, Series-A ready.
+    </p>
+    <div class="cover-footer">
+      <div><span>Round</span> &nbsp; Seed / Phased Rs 26 Cr</div>
+      <div><span>Geography</span> &nbsp; Noida, Uttar Pradesh, India</div>
+      <div><span>Stage</span> &nbsp; Infrastructure deployed &middot; go-to-market</div>
+      <div><span>Confidential</span> &nbsp; Not a public prospectus</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 02 · THE ASK -->
+<section class="slide" data-slide="2">
+  <div class="slide-inner">
+    <div class="slide-tag">The Ask &middot; Up Front</div>
+    <h2 class="slide-title">
+      Rs 26 Crore across <span class="tl-teal">24 months</span>,
+      <span class="tl-orange">sequenced in 4 phases.</span>
+    </h2>
+    <p class="slide-subtitle">
+      We raise in tranches, not one round. Each phase is unlocked by the previous.
+      Managed Services generates revenue from Month 6 &mdash; de-risking every subsequent tranche.
+    </p>
+
+    <div class="grid-4" style="margin-bottom:1.3rem">
+      <div class="bigstat"><div class="bigstat-val teal">Rs 26 Cr</div><div class="bigstat-lbl">Total capital</div><div class="bigstat-sub">Across 24 months, 4 phases</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">Rs 3.85 Cr</div><div class="bigstat-lbl">Already deployed</div><div class="bigstat-sub">HPC infrastructure operational today</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">Rs 20.3 Cr</div><div class="bigstat-lbl">Year 3 revenue</div><div class="bigstat-sub">Across 3 verticals &middot; +Rs 1 Cr EBITDA</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">50+ FTEs</div><div class="bigstat-lbl">By Month 12</div><div class="bigstat-sub">No interns &middot; Rs 1L salary floor</div></div>
+    </div>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:18%">Phase</th>
+        <th style="width:12%">Timing</th>
+        <th style="width:14%">Amount</th>
+        <th style="width:30%">Lead sources</th>
+        <th style="width:26%">What it unlocks</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Phase 0 &middot; Foundation</td>
+          <td>M0&ndash;M3</td>
+          <td class="teal num">Rs 3.5 Cr</td>
+          <td>Founder + F&amp;F + 2&ndash;3 angels + SISFS grant</td>
+          <td>Holding co; Group CEO + VH-MS hired; Managed Services live</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 1 &middot; Bioinformatics</td>
+          <td>M2&ndash;M8</td>
+          <td class="teal num">Rs 6.5 Cr</td>
+          <td>BioAngels / IAN lead + BIRAC RDI + HNI angels</td>
+          <td>GPU cluster live; 5 PhD scientists; first pharma pilots signed</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 2 &middot; Cybersecurity</td>
+          <td>M8&ndash;M14</td>
+          <td class="orange num">Rs 10.0 Cr</td>
+          <td>Indian cyber VCs (Peak XV, Elevation) or strategic</td>
+          <td>AEGIS + AlgoForge team; SOC 2 Type I; BFSI pilots</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 3 &middot; Series A Prep</td>
+          <td>M14&ndash;M22</td>
+          <td class="yellow num">Rs 6.0 Cr</td>
+          <td>Existing investor pro-rata + venture debt</td>
+          <td>Scale winning verticals; reserve replenish; Series A readiness</td>
+        </tr>
+        <tr class="total">
+          <td class="emph">Cumulative</td>
+          <td>24 months</td>
+          <td class="green num">Rs 26.0 Cr</td>
+          <td colspan="2">From seed to Series-A-ready, across 3 revenue-generating verticals</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="punchline" style="margin-top:1.2rem">
+      <div class="punchline-val">
+        <span class="hi">Series-A-complexity fundraise at seed prices.</span>
+        Three verticals, one infrastructure, one team, one narrative.
+      </div>
+      <div class="punchline-sub">
+        Rs 26 Cr total deployment vs Rs 60&ndash;80 Cr if built as three standalone companies.
+        Capital efficiency compounds across infrastructure, back-office, and engineering culture.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 03 · WHAT WE ARE -->
+<section class="slide" data-slide="3">
+  <div class="slide-inner">
+    <div class="slide-tag orange">What We Are</div>
+    <h2 class="slide-title">
+      Three independent businesses. <span class="tl-orange">One shared foundation.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Not a diversified conglomerate. A specialist HPC platform leveraged across three high-margin,
+      data-sovereign technology services that share infrastructure, security posture, engineering discipline,
+      and back-office &mdash; but not customers or P&amp;L.
+    </p>
+
+    <div class="grid-3" style="margin-bottom:1.2rem">
+      <div class="card" style="display:flex; flex-direction:column">
+        <div class="card-label">Vertical 01</div>
+        <div class="card-title">Bioinformatics &amp; Drug Discovery</div>
+        <div class="card-body" style="margin-bottom:0.7rem">
+          Computational drug discovery services for Indian pharma &amp; biotech.
+          Virtual screening, MD simulations, ADMET prediction, target analysis.
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.7rem">
+          <span class="pill">High margin</span><span class="pill">Low churn</span><span class="pill">Scientific moat</span>
+        </div>
+        <div style="margin-top:auto; padding-top:0.6rem; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; font-size:0.76rem">
+          <span style="color:var(--text-dim)">Y3 revenue</span>
+          <span style="color:var(--teal); font-weight:700">Rs 6.0 Cr</span>
+        </div>
+      </div>
+
+      <div class="card orange" style="display:flex; flex-direction:column">
+        <div class="card-label">Vertical 02</div>
+        <div class="card-title">Cybersecurity (AEGIS &times; AlgoForge)</div>
+        <div class="card-body" style="margin-bottom:0.7rem">
+          Six AI models (AEGIS) powering six BFSI-grade cybersecurity products (AlgoForge).
+          Data-sovereign, on-premise deployable.
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.7rem">
+          <span class="pill orange">High ACV</span><span class="pill orange">BFSI focus</span><span class="pill orange">IP moat</span>
+        </div>
+        <div style="margin-top:auto; padding-top:0.6rem; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; font-size:0.76rem">
+          <span style="color:var(--text-dim)">Y3 revenue</span>
+          <span style="color:var(--orange); font-weight:700">Rs 8.5 Cr</span>
+        </div>
+      </div>
+
+      <div class="card yellow" style="display:flex; flex-direction:column">
+        <div class="card-label">Vertical 03</div>
+        <div class="card-title">Managed Services</div>
+        <div class="card-body" style="margin-bottom:0.7rem">
+          Six revenue streams on the already-deployed Rs 3.85 Cr HPC infrastructure.
+          Private cloud, AIaaS, MSSP, backup/DR, SaaS hosting, managed Wi-Fi.
+        </div>
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:0.7rem">
+          <span class="pill yellow">Cash engine</span><span class="pill yellow">Fastest breakeven</span><span class="pill yellow">6 streams</span>
+        </div>
+        <div style="margin-top:auto; padding-top:0.6rem; border-top:1px solid rgba(255,255,255,0.06); display:flex; justify-content:space-between; font-size:0.76rem">
+          <span style="color:var(--text-dim)">Y3 revenue</span>
+          <span style="color:var(--yellow); font-weight:700">Rs 5.8 Cr</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="bigstat"><div class="bigstat-val teal">Rs 3.85 Cr</div><div class="bigstat-lbl">Infrastructure deployed</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">3 entities</div><div class="bigstat-lbl">Under one holding co</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">50+ FTEs</div><div class="bigstat-lbl">By Month 12</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">Rs 20.3 Cr</div><div class="bigstat-lbl">Y3 combined revenue</div></div>
+    </div>
+
+    <div class="insight orange" style="margin-top:1rem">
+      <strong>The founding insight:</strong> Enterprise HPC, professional back-office, and BFSI-grade
+      security posture amortize across three revenue-generating verticals at lower aggregate cost than
+      any single vertical could justify alone. Each vertical has its own P&amp;L, Vertical Head, and ESOP.
+    </div>
+  </div>
+</section>
+<!-- SLIDE 04 · WHY NOW -->
+<section class="slide" data-slide="4">
+  <div class="slide-inner">
+    <div class="slide-tag yellow">Why Now</div>
+    <h2 class="slide-title">
+      Four macro tailwinds hitting <span class="tl-yellow">India simultaneously.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Not a market Quisitive is trying to create. A market being forced into existence by regulation,
+      capital flows, and the economics of sovereign compute.
+    </p>
+
+    <div class="grid-2" style="gap:1rem; margin-bottom:1rem">
+      <div class="card">
+        <div class="card-label">01 &middot; Regulatory</div>
+        <div class="card-title">Compliance-driven procurement cycle</div>
+        <div class="card-body">
+          <strong>DPDP Act 2023</strong> operationalized &middot; data fiduciaries face penalties up to Rs 250 Cr.
+          <strong>RBI Master Direction on IT Governance</strong> (Nov 2023) + <strong>Fraud Risk Management</strong> (2024)
+          mandate Board-approved cyber policy, 24&times;7 SOC, continuous surveillance &mdash; AI detection <em>encouraged</em>.
+          <strong>SEBI CSCRF</strong> (2024) mandates comprehensive cyber controls for regulated entities (brokers, MFs, KRAs).
+          Hyperscaler India regions satisfy data-residency in principle, but on-premise delivers material cost, latency, and
+          key-management advantages for sensitive workloads.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">02 &middot; Capital</div>
+        <div class="card-title">Indian deep-tech funding environment</div>
+        <div class="card-body">
+          <strong>BIRAC RDI Fund</strong> launched Feb 2026 &mdash; first national call currently open, actively soliciting
+          deep-tech proposals.
+          <strong>BIRAC BIG scheme</strong> disbursing Rs 50 L per startup for 18-month POC work (existing, active).
+          <strong>Indian cyber VC activity</strong> accelerating materially 2022&ndash;2025: Druva unicorn status 2021,
+          Safe Security $70M Series C 2024 led by Cisco Investments; Peak XV, Elevation, Lightspeed active.
+          <strong>SISFS</strong> supports Rs 20 L grants for deep-tech.
+        </div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">03 &middot; Cost</div>
+        <div class="card-title">Sovereign compute economics</div>
+        <div class="card-body">
+          <strong>Cloud egress charges</strong> Rs 7&ndash;8/GB structurally penalize cloud-native Indian SaaS at scale.
+          <strong>GPU availability</strong> remains tight on public clouds; reserved-capacity pricing often exceeds
+          list; spot instances unreliable for training workloads.
+          <strong>On-premise HPC</strong> has become price-competitive with cloud for predictable, steady-state workloads &mdash;
+          particularly where data residency, latency, and egress are material.
+        </div>
+      </div>
+      <div class="card green">
+        <div class="card-label">04 &middot; Talent</div>
+        <div class="card-title">Senior HPC talent reachable in NCR</div>
+        <div class="card-body">
+          NCR has <strong>deep enterprise-IT veterans</strong> exiting Atos, TCS, HCL, BT for meaningful equity.
+          <strong>IIT Delhi, IIIT-D, NSUT, DTU</strong> graduate 2000+ ML/CS students/year.
+          <strong>Return-from-abroad scientists</strong> (US postdocs, UK biotech) accepting Rs 1.5&ndash;2.5 L PhD roles
+          for scientific autonomy + ESOP.
+        </div>
+      </div>
+    </div>
+
+    <div class="punchline">
+      <div class="punchline-val">
+        <span class="hi">A narrowing window.</span> The buyers are forming procurement panels now.
+      </div>
+      <div class="punchline-sub">
+        RBI inspection cycle 2025&ndash;2027 will test 2023/2024 Master Direction compliance. DPDP Act penalties in force.
+        SEBI CSCRF attestations due. Private cloud vs hyperscaler decisions being made by Indian CTOs this year.
+        Quisitive positions across all three before procurement panels close.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 05 · INFRASTRUCTURE -->
+<section class="slide" data-slide="5">
+  <div class="slide-inner">
+    <div class="slide-tag purple">The Foundation</div>
+    <h2 class="slide-title">
+      Rs 3.85 Cr of HPC. <span class="tl-purple">Already operational.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Not a plan to deploy. Not a cloud commitment to burn. Enterprise hardware installed, configured,
+      and running in our Noida data center today. Every vertical starts with production-grade compute.
+    </p>
+
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="bigstat purple"><div class="bigstat-val purple">128 cores</div><div class="bigstat-lbl">Xeon Gold Sapphire Rapids</div><div class="bigstat-sub">Dual HPE DL380 Gen11</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">1.4 TB</div><div class="bigstat-lbl">DDR5 ECC memory</div><div class="bigstat-sub">Registered 4800 MT/s</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">23 TB</div><div class="bigstat-lbl">SAN SSD storage</div><div class="bigstat-sub">500k IOPS &middot; SAS 12 Gbps</div></div>
+      <div class="bigstat red"><div class="bigstat-val red">40 Gbps</div><div class="bigstat-lbl">FortiGate HA firewall</div><div class="bigstat-sub">SP5 ASIC &middot; 1.5M sessions</div></div>
+    </div>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:28%">Asset Class</th>
+        <th style="width:38%">Specification</th>
+        <th style="width:18%">Primary Use</th>
+        <th style="width:16%">Status</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="emph">HPE ProLiant DL380 Gen11 &times;2</td><td>Dual Xeon Gold 6548Y+ &middot; 128 cores &middot; 1.4 TB DDR5 ECC</td><td>All 3 verticals</td><td class="green">Deployed</td></tr>
+        <tr><td class="emph">HPE MSA 2060 SAN</td><td>23 TB SSD &middot; RAID-6 &middot; iSCSI 10 GbE</td><td>Storage, backups</td><td class="green">Deployed</td></tr>
+        <tr><td class="emph">Aruba CX 8325 core switch</td><td>48&times; 25 GbE + 8&times; 100 GbE &middot; VXLAN-EVPN</td><td>Network backbone</td><td class="green">Deployed</td></tr>
+        <tr><td class="emph">Aruba Wi-Fi 6E fleet</td><td>AP-615 APs + CX 6100 PoE &middot; Aruba Central</td><td>Wi-Fi services</td><td class="green">Deployed</td></tr>
+        <tr><td class="emph">FortiGate 120G HA Pair</td><td>SP5 ASIC &middot; 40 Gbps FW &middot; 20 Gbps IPS</td><td>Security &middot; MSSP</td><td class="green">Deployed</td></tr>
+        <tr><td class="emph">[Phase 1] 8&times; NVIDIA A100 80GB</td><td>156 TFLOPS aggregate &middot; NVLink &middot; CUDA 12</td><td>Drug discovery + AI</td><td class="yellow">Funded in Phase 1</td></tr>
+      </tbody>
+    </table>
+
+    <div class="insight green" style="margin-top:1rem">
+      <strong>Translation for investors:</strong> Rs 26 Cr of capital doesn&rsquo;t fund hardware &mdash;
+      it funds people, customer acquisition, and compliance. AI-native startups without on-prem HPC
+      typically allocate 20&ndash;35% of seed capital to cloud-compute commitments; our infrastructure
+      being deployed means that allocation is zero.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 06 · BIOINFORMATICS OVERVIEW -->
+<section class="slide" data-slide="6">
+  <div class="slide-inner">
+    <div class="slide-tag">Vertical 01 &middot; Bioinformatics &amp; Drug Discovery</div>
+    <h2 class="slide-title">
+      Indian pharma&rsquo;s <span class="tl-teal">missing</span> computational layer.
+    </h2>
+    <p class="slide-subtitle">
+      ~200&ndash;400 Indian drug companies run active discovery programs. Most lack dedicated
+      computational chemistry teams. We are their on-demand HPC + scientific services provider,
+      delivering virtual screening and ADMET before a single molecule is synthesized.
+    </p>
+
+    <div class="grid-4" style="margin-bottom:1.2rem">
+      <div class="bigstat"><div class="bigstat-val teal">$2.23B</div><div class="bigstat-lbl">Cost per new drug</div><div class="bigstat-sub">Deloitte 2024</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">6.7%</div><div class="bigstat-lbl">Phase I &rarr; approval</div><div class="bigstat-sub">Citeline 2014&ndash;2023</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">30&ndash;45%</div><div class="bigstat-lbl">Failures are ADMET</div><div class="bigstat-sub">Wong et al. 2019 &middot; preventable in silico</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">$3.6B</div><div class="bigstat-lbl">AI drug discovery TAM</div><div class="bigstat-sub">~30% CAGR global</div></div>
+    </div>
+
+    <div class="grid-2" style="gap:1.2rem">
+      <div class="card">
+        <div class="card-label">Problem</div>
+        <div class="card-title">Wet-lab ADMET is slow and expensive</div>
+        <div class="card-body">
+          Indian pharma runs 10&ndash;50 NCE programs in parallel. ADMET liability testing costs
+          <strong>Rs 2&ndash;5 L per candidate, takes 6&ndash;8 weeks</strong>. At 100 candidates per program, this is
+          Rs 2&ndash;5 Cr of sunk work that often eliminates 60%+ of the library.
+          30&ndash;45% of late-stage clinical failures trace back to ADMET issues
+          <strong>predictable in silico</strong>.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Solution</div>
+        <div class="card-title">GNN-based ADMET + virtual screening + MD</div>
+        <div class="card-body">
+          We dock 10<sup>4</sup>&ndash;10<sup>6</sup> compounds in days, predict hERG / CYP450 / BBB / solubility
+          per compound via DeepChem GNNs, and validate the top 10&ndash;50 hits with 100&ndash;500 ns
+          MD simulations. <strong>Rs 2&ndash;5 L of wet-lab becomes Rs 10&ndash;30 K of compute.</strong>
+          Delivered in 2&ndash;5 days.
+        </div>
+      </div>
+    </div>
+
+    <div class="punchline" style="margin-top:1rem">
+      <div class="punchline-val">
+        <span class="hi">Indian CRDMO gross margins are 40&ndash;50%.</span>
+        Computational services support 55&ndash;70% gross.
+      </div>
+      <div class="punchline-sub">
+        Because we replace labor-intensive screening with software-replicable computation, and our
+        infrastructure is a sunk cost amortized across three verticals. Syngene FY24 illustrates the
+        comparison: ~45% gross / ~28% EBITDA. Our Y3 target: 60&ndash;65% gross, 30&ndash;40% EBITDA at scale.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 07 · BIOINFORMATICS FINANCIALS + CHART -->
+<section class="slide" data-slide="7">
+  <div class="slide-inner">
+    <div class="slide-tag">Vertical 01 &middot; Services &amp; 3-Year Plan</div>
+    <h2 class="slide-title">
+      Five service lines. <span class="tl-teal">55&ndash;70% gross margins.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Priced below Indian CRO benchmarks, 3&ndash;10&times; below global CROs.
+      Team: 5 PhDs + bioinformatics engineer + lab tech + BD associate. All roles Rs 1L+/month.
+    </p>
+
+    <div class="grid-2" style="gap:1.2rem; margin-bottom:1rem">
+      <div>
+        <div class="card-label" style="margin-bottom:0.5rem; color:var(--teal)">Service Lines</div>
+        <table class="ftable">
+          <thead><tr>
+            <th style="width:50%">Service</th>
+            <th style="width:25%">Price (Rs L)</th>
+            <th style="width:25%">Turnaround</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="emph">Virtual Screening (10<sup>4</sup>&ndash;10<sup>6</sup>)</td><td class="teal">3&ndash;8</td><td>1&ndash;2 weeks</td></tr>
+            <tr><td class="emph">ADMET Property Prediction</td><td class="teal">1&ndash;3</td><td>2&ndash;5 days</td></tr>
+            <tr><td class="emph">MD Simulation (100&ndash;500 ns)</td><td class="teal">5&ndash;12</td><td>2&ndash;4 weeks</td></tr>
+            <tr><td class="emph">Target Structure Analysis</td><td class="teal">2&ndash;4</td><td>1 week</td></tr>
+            <tr><td class="emph">HPC Compute Rental / mo</td><td class="teal">0.8&ndash;2</td><td>Ongoing</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="padding:1.1rem">
+        <div class="card-label">3-Year Revenue Trajectory</div>
+        <svg viewBox="0 0 420 235" style="width:100%; height:auto; margin-top:0.4rem" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#1B2A3E" stroke-width="0.5">
+            <line x1="40" y1="30" x2="400" y2="30"/>
+            <line x1="40" y1="85" x2="400" y2="85"/>
+            <line x1="40" y1="140" x2="400" y2="140"/>
+            <line x1="40" y1="195" x2="400" y2="195"/>
+            <line x1="40" y1="210" x2="400" y2="210"/>
+          </g>
+          <text x="32" y="34" fill="#7E8C9F" font-size="9" text-anchor="end">6.0</text>
+          <text x="32" y="89" fill="#7E8C9F" font-size="9" text-anchor="end">4.0</text>
+          <text x="32" y="144" fill="#7E8C9F" font-size="9" text-anchor="end">2.0</text>
+          <text x="32" y="199" fill="#7E8C9F" font-size="9" text-anchor="end">0.5</text>
+          <text x="32" y="214" fill="#7E8C9F" font-size="9" text-anchor="end">0</text>
+
+          <rect x="90" y="190" width="60" height="20" fill="#2EC4B6" opacity="0.75"/>
+          <text x="120" y="184" text-anchor="middle" fill="#2EC4B6" font-size="11" font-weight="700">Rs 0.7 Cr</text>
+
+          <rect x="200" y="125" width="60" height="85" fill="#2EC4B6" opacity="0.85"/>
+          <text x="230" y="119" text-anchor="middle" fill="#2EC4B6" font-size="11" font-weight="700">Rs 2.5 Cr</text>
+
+          <rect x="310" y="30" width="60" height="180" fill="#2EC4B6"/>
+          <text x="340" y="24" text-anchor="middle" fill="#2EC4B6" font-size="11" font-weight="700">Rs 6.0 Cr</text>
+
+          <text x="120" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 1</text>
+          <text x="230" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 2</text>
+          <text x="340" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 3</text>
+
+          <text x="120" y="233" text-anchor="middle" fill="#7E8C9F" font-size="8">5&ndash;8 cust</text>
+          <text x="230" y="233" text-anchor="middle" fill="#7E8C9F" font-size="8">15&ndash;25</text>
+          <text x="340" y="233" text-anchor="middle" fill="#7E8C9F" font-size="8">30&ndash;45</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="bigstat"><div class="bigstat-val teal">Rs 6.0 Cr</div><div class="bigstat-lbl">Y3 revenue target</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">30&ndash;45</div><div class="bigstat-lbl">Y3 active customers</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">55&ndash;70%</div><div class="bigstat-lbl">Gross margin</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">M14&ndash;18</div><div class="bigstat-lbl">Breakeven</div></div>
+    </div>
+
+    <div class="insight" style="margin-top:0.9rem">
+      <strong>Pilot pipeline:</strong> Early-stage discussions underway with NCR-based generics manufacturer,
+      Hyderabad specialty pharma, and Gurugram biotech startup via Prof. Rakesh Bhatnagar&rsquo;s network (JNU).
+      BIRAC RDI Fund application in preparation. First paid pilot targeted M6&ndash;M8.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 08 · CYBERSECURITY OVERVIEW -->
+<section class="slide" data-slide="8">
+  <div class="slide-inner">
+    <div class="slide-tag orange">Vertical 02 &middot; Cybersecurity (AEGIS &times; AlgoForge)</div>
+    <h2 class="slide-title">
+      <span class="tl-orange">6 AI models.</span> <span class="tl-teal">6 products.</span> One BFSI-grade entity.
+    </h2>
+    <p class="slide-subtitle">
+      AEGIS is the AI engine &mdash; six production ML models, independently researchable and retrainable.
+      AlgoForge is the product layer &mdash; six customer-facing applications consuming AEGIS as internal services.
+      One team. One compliance posture. One commercial motion.
+    </p>
+
+    <div class="grid-2" style="gap:1rem; margin-bottom:1rem">
+      <div class="card orange">
+        <div class="card-label">AEGIS Engine &middot; 6 ML models</div>
+        <div class="card-title">Independent research tracks on shared infrastructure</div>
+        <div class="card-body">
+          <strong>Anomaly</strong> (autoencoder/GAN) &middot; <strong>Classification</strong> (CNN/LSTM/Transformer) &middot;
+          <strong>NLP/Threat Intel</strong> (LLM + LoRA) &middot; <strong>Correlation</strong> (rule + ML hybrid) &middot;
+          <strong>Behavioral/UEBA</strong> (GMM + LSTM) &middot; <strong>Predictive/CVE</strong> (gradient boost).
+          Retraining cadences tuned to drift rate: NLP/threat-intel weekly, anomaly/behavioral monthly,
+          classification/predictive quarterly.
+          <strong>Adversarial robustness testing (PGD/FGSM)</strong> gates every model promotion;
+          <strong>SHAP/LIME explainability</strong> surfaces reasoning for every L1/L2 alert &mdash; required for BFSI audit.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">AlgoForge Products &middot; 6 customer-facing apps</div>
+        <div class="card-title">Shared platform, distinct buyers &amp; pricing</div>
+        <div class="card-body">
+          <strong>ForgeShield</strong> (fraud/AML) &middot; <strong>ForgeSentinel</strong> (NDR) &middot;
+          <strong>ForgeVault</strong> (CSPM) &middot; <strong>ForgeSOC</strong> (XDR) &middot;
+          <strong>ForgeIntel</strong> (CTI/OSINT) &middot; <strong>ForgeIdentity</strong> (ZTA).
+          Each product consumes one or more AEGIS models via gRPC/REST.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="bigstat orange"><div class="bigstat-val orange">Rs 8.5 Cr</div><div class="bigstat-lbl">Y3 ARR target</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">12&ndash;18 mo</div><div class="bigstat-lbl">BFSI sales cycle</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">Rs 5&ndash;50 L</div><div class="bigstat-lbl">Monthly contract values</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">22 people</div><div class="bigstat-lbl">Team at peak</div></div>
+    </div>
+
+    <div class="insight orange">
+      <strong>Regulatory tailwind:</strong> RBI Master Direction on IT Governance (Nov 2023),
+      Master Direction on Fraud Risk Management (2024), DPDP Act 2023, and SEBI CSCRF (2024) are all
+      driving BFSI investment in 24&times;7 SOC, continuous surveillance, and fraud-detection capability &mdash;
+      AI-based detection explicitly encouraged. Our Noida DC delivers data residency in-country by geography.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 09 · CYBERSECURITY FINANCIALS -->
+<section class="slide" data-slide="9">
+  <div class="slide-inner">
+    <div class="slide-tag orange">Vertical 02 &middot; 3-Year Commercial Plan</div>
+    <h2 class="slide-title">
+      BFSI pilots at Month 10. <span class="tl-orange">Rs 8.5 Cr ARR by Y3.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Primary market: Indian BFSI &amp; fintech &mdash; ICICI (Gurugram), Axis Bank (Noida),
+      Paytm (Noida), Razorpay (NCR), 40+ NBFCs/tier-2 banks. Secondary: mid-market enterprise SOCs
+      + MSSP white-label. Tertiary: SaaS companies via ForgeVault self-serve.
+    </p>
+
+    <div class="grid-2" style="gap:1.2rem; margin-bottom:1rem">
+      <div class="card orange" style="padding:1.1rem">
+        <div class="card-label">Revenue Build-Up (ARR trajectory)</div>
+        <svg viewBox="0 0 420 235" style="width:100%; height:auto; margin-top:0.4rem" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="#1B2A3E" stroke-width="0.5">
+            <line x1="40" y1="30" x2="400" y2="30"/>
+            <line x1="40" y1="80" x2="400" y2="80"/>
+            <line x1="40" y1="130" x2="400" y2="130"/>
+            <line x1="40" y1="180" x2="400" y2="180"/>
+            <line x1="40" y1="210" x2="400" y2="210"/>
+          </g>
+          <text x="32" y="34" fill="#7E8C9F" font-size="9" text-anchor="end">10</text>
+          <text x="32" y="84" fill="#7E8C9F" font-size="9" text-anchor="end">7.5</text>
+          <text x="32" y="134" fill="#7E8C9F" font-size="9" text-anchor="end">5</text>
+          <text x="32" y="184" fill="#7E8C9F" font-size="9" text-anchor="end">2.5</text>
+          <text x="32" y="214" fill="#7E8C9F" font-size="9" text-anchor="end">0</text>
+
+          <rect x="90" y="200" width="60" height="10" fill="#FF6B35" opacity="0.7"/>
+          <text x="120" y="194" text-anchor="middle" fill="#FF6B35" font-size="11" font-weight="700">Rs 0.5 Cr</text>
+
+          <rect x="200" y="130" width="60" height="80" fill="#FF6B35" opacity="0.85"/>
+          <text x="230" y="124" text-anchor="middle" fill="#FF6B35" font-size="11" font-weight="700">Rs 4.0 Cr</text>
+
+          <rect x="310" y="40" width="60" height="170" fill="#FF6B35"/>
+          <text x="340" y="34" text-anchor="middle" fill="#FF6B35" font-size="11" font-weight="700">Rs 8.5 Cr</text>
+
+          <text x="120" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 1</text>
+          <text x="230" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 2</text>
+          <text x="340" y="225" text-anchor="middle" fill="#B8C4D4" font-size="10" font-weight="600">Year 3</text>
+        </svg>
+      </div>
+
+      <div>
+        <div class="card-label" style="margin-bottom:0.5rem; color:var(--orange)">Target Customer Segments</div>
+        <table class="ftable">
+          <thead><tr>
+            <th style="width:30%">Segment</th>
+            <th style="width:30%">ACV (Annual)</th>
+            <th style="width:40%">Primary products</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="emph">Tier-1 BFSI</td><td class="orange">Rs 60 L&ndash;6 Cr</td><td>ForgeShield + ForgeSOC + ForgeSentinel</td></tr>
+            <tr><td class="emph">Tier-2 banks / NBFCs</td><td class="orange">Rs 24&ndash;60 L</td><td>ForgeShield + ForgeIdentity</td></tr>
+            <tr><td class="emph">Fintech / Payments</td><td class="orange">Rs 18&ndash;45 L</td><td>ForgeShield + ForgeVault</td></tr>
+            <tr><td class="emph">Mid-market SOCs</td><td class="orange">Rs 12&ndash;36 L</td><td>ForgeSOC + ForgeSentinel</td></tr>
+            <tr><td class="emph">MSSP white-label</td><td class="orange">Rs 36 L&ndash;1.8 Cr</td><td>Bundled, per-client markup</td></tr>
+            <tr><td class="emph">SaaS / DevSecOps</td><td class="orange">Rs 6&ndash;60 L</td><td>ForgeVault (self-serve)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="bigstat orange"><div class="bigstat-val orange">M10&ndash;M11</div><div class="bigstat-lbl">First paid BFSI pilot</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">M15&ndash;M18</div><div class="bigstat-lbl">Meaningful MRR</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">M26&ndash;M28</div><div class="bigstat-lbl">Breakeven</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">25&ndash;40</div><div class="bigstat-lbl">Y3 customers</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10 · MANAGED SERVICES OVERVIEW -->
+<section class="slide" data-slide="10">
+  <div class="slide-inner">
+    <div class="slide-tag yellow">Vertical 03 &middot; Managed Services</div>
+    <h2 class="slide-title">
+      Six revenue streams. <span class="tl-yellow">One shared infrastructure.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Private cloud, AI-as-a-Service, backup &amp; disaster recovery, managed security, vertical SaaS
+      hosting, managed Wi-Fi &mdash; all on the already-deployed Rs 3.85 Cr infrastructure.
+      The fastest-to-breakeven vertical, generating cashflow to subsidize the other two during ramp.
+    </p>
+
+    <div class="grid-3" style="margin-bottom:1rem">
+      <div class="card yellow">
+        <div class="card-label">Stream 01</div>
+        <div class="card-title">Private AI-as-a-Service</div>
+        <div class="card-body">Private LLM API, RAG doc intelligence, custom chatbots, OCR, fine-tuning. <strong>85&ndash;92% GM</strong>.</div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Stream 02</div>
+        <div class="card-title">Private Cloud / VPS / IaaS</div>
+        <div class="card-body">VPS, managed K8s, DBaaS, VDI, S3-compatible object storage. <strong>~10&times; cheaper than AWS</strong>.</div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Stream 03</div>
+        <div class="card-title">Backup &amp; Disaster Recovery</div>
+        <div class="card-body">BaaS, DRaaS, managed NAS, database archival. <strong>&lt;2% churn &middot; 24&ndash;36 mo contracts</strong>.</div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Stream 04</div>
+        <div class="card-title">MSSP (Managed Security)</div>
+        <div class="card-body">Managed firewall, SOC-lite, VPN, UTP, VAPT, compliance audit. FortiGate-backed SLAs.</div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Stream 05</div>
+        <div class="card-title">Vertical SaaS Hosting</div>
+        <div class="card-body">Legal tech, fintech, EdTech, healthcare HMIS, manufacturing ERP. <strong>&lt;5% expected churn</strong> (multi-year contracts).</div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Stream 06</div>
+        <div class="card-title">Managed Wi-Fi &amp; Network</div>
+        <div class="card-body">Office Wi-Fi, guest portal, SD-WAN, site surveys. Aruba 6E fleet, Central-managed.</div>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="bigstat yellow"><div class="bigstat-val yellow">Rs 5.8 Cr</div><div class="bigstat-lbl">Y3 revenue</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">M14&ndash;M16</div><div class="bigstat-lbl">Breakeven (fastest)</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">60&ndash;85%</div><div class="bigstat-lbl">Blended GM</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">50&ndash;80</div><div class="bigstat-lbl">Y3 customers</div></div>
+    </div>
+
+    <div class="insight yellow" style="margin-top:1rem">
+      <strong>Cross-sell compounding:</strong> A VPS customer naturally needs backup, a backup customer
+      needs security, a security customer needs AIaaS for their SOC. Average revenue per account grows
+      <strong>2&ndash;4&times; over first 18 months</strong> of the relationship.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11 · 36-MONTH P&L -->
+<section class="slide" data-slide="11">
+  <div class="slide-inner">
+    <div class="slide-tag green">The Financial Model</div>
+    <h2 class="slide-title">
+      36-month combined P&amp;L. <span class="tl-green">EBITDA positive by Year 3.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Quarterly cadence. All figures Rs Crore. Includes group-layer overhead (CEO + 3 VHs + CFO + legal + HR).
+      Year 3 EBITDA is deliberately conservative &mdash; a 5% margin reflects professional team cost,
+      not intern-heavy spreadsheet optimism.
+    </p>
+
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:22%">Rs Crore</th>
+        <th style="width:9.75%">Q1</th>
+        <th style="width:9.75%">Q2</th>
+        <th style="width:9.75%">Q3</th>
+        <th style="width:9.75%">Q4</th>
+        <th style="width:9.75%">Q5&ndash;Q8</th>
+        <th style="width:9.75%">Y2 Total</th>
+        <th style="width:9.75%">Y3 Total</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="emph">Bioinformatics Rev</td><td class="num">0.0</td><td class="num">0.1</td><td class="num">0.25</td><td class="num">0.35</td><td class="num">2.5</td><td class="num teal">2.5</td><td class="num teal">6.0</td></tr>
+        <tr><td class="emph">Cybersecurity ARR</td><td class="num">0.0</td><td class="num">0.05</td><td class="num">0.15</td><td class="num">0.30</td><td class="num">4.0</td><td class="num orange">4.0</td><td class="num orange">8.5</td></tr>
+        <tr><td class="emph">Managed Services Rev</td><td class="num">0.05</td><td class="num">0.15</td><td class="num">0.25</td><td class="num">0.35</td><td class="num">3.2</td><td class="num yellow">3.2</td><td class="num yellow">5.8</td></tr>
+        <tr class="total"><td class="emph">Total Revenue</td><td class="num">0.05</td><td class="num">0.30</td><td class="num">0.65</td><td class="num">1.00</td><td class="num">9.7</td><td class="num green">9.7</td><td class="num green">20.3</td></tr>
+        <tr><td class="emph">Vertical opex</td><td class="num">(1.5)</td><td class="num">(1.8)</td><td class="num">(2.0)</td><td class="num">(2.2)</td><td class="num">(11.2)</td><td class="num red">(11.2)</td><td class="num red">(14.8)</td></tr>
+        <tr><td class="emph">Group layer costs</td><td class="num">(0.7)</td><td class="num">(0.8)</td><td class="num">(0.9)</td><td class="num">(1.0)</td><td class="num">(3.9)</td><td class="num red">(3.9)</td><td class="num red">(4.5)</td></tr>
+        <tr class="total"><td class="emph">EBITDA</td><td class="num red">(2.15)</td><td class="num red">(2.30)</td><td class="num red">(2.25)</td><td class="num red">(2.20)</td><td class="num red">(5.4)</td><td class="num red">(5.4)</td><td class="num green">+1.0</td></tr>
+        <tr><td class="emph">EBITDA margin</td><td class="num">n/m</td><td class="num">n/m</td><td class="num">n/m</td><td class="num">n/m</td><td class="num red">(56%)</td><td class="num red">(56%)</td><td class="num green">+5%</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-4">
+      <div class="bigstat red"><div class="bigstat-val red">Rs (8.9) Cr</div><div class="bigstat-lbl">Y1 EBITDA</div><div class="bigstat-sub">Peak investment year</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">Rs (5.4) Cr</div><div class="bigstat-lbl">Y2 EBITDA</div><div class="bigstat-sub">Cybersecurity vertical scaling</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">Rs +1.0 Cr</div><div class="bigstat-lbl">Y3 EBITDA</div><div class="bigstat-sub">First profitable year</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">Q10</div><div class="bigstat-lbl">Gross-margin breakeven</div><div class="bigstat-sub">Revenue &gt; vertical opex</div></div>
+    </div>
+
+    <div class="insight green" style="margin-top:1rem">
+      <strong>Year 3 EBITDA is deliberately conservative.</strong> A 5% margin reflects professional team cost
+      structure (50+ FTEs, no interns, Rs 1L floor) &mdash; the kind of P&amp;L investors can underwrite. Multiple
+      upside vectors (one BFSI large contract, one CRDMO conversion) can meaningfully improve Y3 EBITDA.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 12 · UNIT ECONOMICS -->
+<section class="slide" data-slide="12">
+  <div class="slide-inner">
+    <div class="slide-tag">Unit Economics</div>
+    <h2 class="slide-title">
+      CAC, LTV, payback &mdash; <span class="tl-teal">per vertical.</span>
+    </h2>
+    <p class="slide-subtitle">
+      <strong>Projected</strong> unit economics for each vertical based on vertical-specific ACV, assumed churn,
+      and comparable Indian-market benchmarks. Each vertical&rsquo;s economics must stand on its own.
+      Blended CAC payback under 18 months. No vertical subsidizes another&rsquo;s acquisition.
+      Figures to be validated against actual post-launch metrics.
+    </p>
+
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:24%">Metric</th>
+        <th style="width:19%">Bioinformatics</th>
+        <th style="width:19%">Cybersecurity</th>
+        <th style="width:19%">Managed Services</th>
+        <th style="width:19%">Group Blended</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="emph">Avg Contract Value (ACV, Y3)</td><td class="teal">Rs 18&ndash;32 L</td><td class="orange">Rs 24&ndash;60 L</td><td class="yellow">Rs 8&ndash;14 L</td><td class="green">Rs 18&ndash;28 L</td></tr>
+        <tr><td class="emph">Gross margin</td><td class="teal">55&ndash;70%</td><td class="orange">72&ndash;85%</td><td class="yellow">60&ndash;85%</td><td class="green">65&ndash;78%</td></tr>
+        <tr><td class="emph">Customer acquisition cost (CAC)</td><td>Rs 4&ndash;8 L</td><td>Rs 8&ndash;18 L</td><td>Rs 1.5&ndash;3 L</td><td>Rs 4&ndash;9 L</td></tr>
+        <tr><td class="emph">Gross profit per customer / yr</td><td>Rs 10&ndash;22 L</td><td>Rs 18&ndash;45 L</td><td>Rs 5&ndash;12 L</td><td>Rs 12&ndash;25 L</td></tr>
+        <tr><td class="emph">CAC payback period</td><td class="teal">6&ndash;12 months</td><td class="orange">6&ndash;15 months</td><td class="yellow">4&ndash;9 months</td><td class="green">6&ndash;12 months</td></tr>
+        <tr><td class="emph">Avg contract length</td><td>18&ndash;36 months</td><td>24&ndash;48 months</td><td>12&ndash;48 months</td><td>18&ndash;36 months</td></tr>
+        <tr><td class="emph">Annual churn rate</td><td>8&ndash;15%</td><td>5&ndash;10%</td><td class="yellow">&lt;5%</td><td class="green">&lt;10%</td></tr>
+        <tr class="total"><td class="emph">LTV / CAC (3-yr)</td><td class="teal num">5.0&ndash;7&times;</td><td class="orange num">6.5&ndash;9&times;</td><td class="yellow num">4.5&ndash;6&times;</td><td class="green num">5.5&ndash;7.5&times;</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-label">Bioinformatics</div>
+        <div class="card-title">Relationship-driven, scientific trust</div>
+        <div class="card-body">
+          Long sales cycles (12&ndash;18 mo) but deep lock-in. Customers typically begin with one-off pilot,
+          expand to retainer model. Low CAC via conference presence (BioAsia, DBT conclaves)
+          and academic network (Prof. Bhatnagar, JNU).
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Cybersecurity</div>
+        <div class="card-title">BFSI gatekept, compliance-heavy</div>
+        <div class="card-body">
+          Higher CAC because BFSI procurement requires named engineering leads, SOC 2, reference checks.
+          But once onboarded, contracts are sticky (5&ndash;10% annual churn) and ACV grows via product
+          cross-sell (ForgeShield &rarr; ForgeSOC &rarr; ForgeIdentity).
+        </div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Managed Services</div>
+        <div class="card-title">Fast sale, low CAC, retention compounds</div>
+        <div class="card-body">
+          Cheapest CAC of the three verticals because sales motion is demo-and-close.
+          Retention is where this vertical wins &mdash; switching costs are high (backup migration,
+          VPS reconfiguration), and cross-sell adds 2&ndash;4&times; ACV over 18 months.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 13 · COMPETITIVE LANDSCAPE -->
+<section class="slide" data-slide="13">
+  <div class="slide-inner">
+    <div class="slide-tag red">The Competition</div>
+    <h2 class="slide-title">
+      No single competitor covers <span class="tl-red">all three verticals.</span>
+    </h2>
+    <p class="slide-subtitle">
+      That&rsquo;s both the opportunity and the challenge. Per-vertical we face established players.
+      At the group level we face no one &mdash; which is our defensibility and our Series A thesis.
+    </p>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:20%">Vertical</th>
+        <th style="width:30%">Direct competitors</th>
+        <th style="width:30%">Where we win</th>
+        <th style="width:20%">Where we lose</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Bioinformatics</td>
+          <td>
+            Schr&ouml;dinger (US &middot; ~$0.9B mkt cap Apr 2026) &middot;
+            Atomwise (US) &middot;
+            Cresset (UK) &middot;
+            Indian CRDMOs (Syngene, Biocon)
+          </td>
+          <td>
+            Indian data sovereignty &middot; 3&ndash;10&times; cheaper pricing &middot; no license lock-in
+            (open-source stack) &middot; fluency with Indian pharma procurement
+          </td>
+          <td>
+            Scientific credibility vs Schr&ouml;dinger (industry-standard) &middot;
+            proprietary ML models gap
+          </td>
+        </tr>
+        <tr>
+          <td class="emph">Cybersecurity</td>
+          <td>
+            Fortinet India &middot; Palo Alto Networks &middot;
+            Lucideus (Indian) &middot; Safe Security &middot;
+            Data Resolve &middot; SonicWall (NDR)
+          </td>
+          <td>
+            Data residency mandated by RBI &middot; BFSI-native product
+            (ForgeShield fraud+AML) &middot; price vs US-based SaaS &middot; ForgeSOC + analyst LLM copilot
+          </td>
+          <td>
+            Brand credibility &middot; referenceability vs established IN cyber players &middot;
+            channel partnerships
+          </td>
+        </tr>
+        <tr>
+          <td class="emph">Managed Services</td>
+          <td>
+            Tata Communications &middot; NxtGen Datacenters &middot;
+            Yotta Infrastructure &middot; Netmagic (NTT) &middot;
+            local NCR MSPs
+          </td>
+          <td>
+            AI-as-a-Service on-prem (unique) &middot; smaller-SME speed advantage &middot;
+            per-customer human support &middot; cross-sell to cyber + bio
+          </td>
+          <td>
+            Scale (competitors have 10&ndash;100&times; our racks) &middot;
+            enterprise contract track record
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight red" style="margin-top:1rem">
+      <strong>Why the combined entity wins:</strong> No US cyber VC-backed player has deep India BFSI procurement fluency.
+      No Indian CRDMO has in-silico depth. No hyperscaler can offer sovereign on-prem.
+      The intersection of all three &mdash; sovereign HPC, regulated-industry compliance, AI-native products &mdash;
+      is where Quisitive is uniquely positioned.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 14 · REGULATORY TAILWIND -->
+<section class="slide" data-slide="14">
+  <div class="slide-inner">
+    <div class="slide-tag yellow">The Tailwind</div>
+    <h2 class="slide-title">
+      Four Indian regulators are <span class="tl-yellow">forcing this market</span> into existence.
+    </h2>
+    <p class="slide-subtitle">
+      Quisitive is not betting on market adoption. We are positioning against compliance deadlines that
+      are already law and have funded enforcement mechanisms behind them.
+    </p>
+
+    <div class="grid-2" style="gap:1rem; margin-bottom:1rem">
+      <div class="card yellow">
+        <div class="card-label">RBI</div>
+        <div class="card-title">IT Governance + Fraud Risk Master Directions (2023&ndash;2024)</div>
+        <div class="card-body">
+          RBI Master Direction on IT Governance (RBI/2023-24/107, Nov 2023) + Master Direction on Fraud Risk
+          Management (2024) + Cyber Resilience MD for non-bank PSOs (July 2024) mandate Board-approved cyber
+          policy, 24&times;7 SOC, continuous surveillance, early fraud detection. <strong>AI-based detection
+          explicitly encouraged (RBI HaRBInger initiative).</strong> Enforcement inspection cycle 2025&ndash;2027
+          drives procurement urgency. Affects scheduled banks, NBFCs (upper &amp; middle layer), and fintechs.
+          ForgeShield + ForgeSOC directly address this regulatory expectation.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">DPDP Act 2023</div>
+        <div class="card-title">Data Protection Act operationalized</div>
+        <div class="card-body">
+          All data fiduciaries (essentially every Indian enterprise handling personal data) must
+          implement technical and organizational safeguards, sensitive-category localization,
+          and breach notification. <strong>Penalties up to Rs 250 Cr per significant incident.</strong>
+          ForgeVault + ForgeIdentity + Managed Services SaaS Hosting directly address compliance needs.
+        </div>
+      </div>
+      <div class="card green">
+        <div class="card-label">SEBI CSCRF</div>
+        <div class="card-title">Cybersecurity framework for regulated entities (2024)</div>
+        <div class="card-body">
+          SEBI&rsquo;s Cybersecurity &amp; Cyber Resilience Framework applies to SEBI-regulated entities &mdash;
+          stock brokers, mutual funds, depositories, KRAs, RTAs &mdash; mandating comprehensive controls,
+          24&times;7 SOC, VAPT, incident response. <strong>Periodic attestations required.</strong>
+          ForgeSOC + compliance bundle map to the framework&rsquo;s control areas.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">BIRAC &middot; DBT</div>
+        <div class="card-title">BIRAC RDI Fund launched Feb 2026</div>
+        <div class="card-body">
+          The BIRAC RDI Fund issued its <strong>first national call for proposals on 13 February 2026</strong>,
+          actively soliciting deep-tech proposals. BIRAC&rsquo;s existing BIG scheme disburses up to Rs 50 L per
+          startup for 18-month POC work (grant-in-aid). BIPP programme supports industry partnership in
+          bioinformatics and drug discovery themes. Quisitive Bioinformatics application in preparation.
+        </div>
+      </div>
+    </div>
+
+    <div class="punchline">
+      <div class="punchline-val">
+        <span class="hi">Compliance deadlines compress procurement cycles.</span>
+        Exploratory to mandatory in 12&ndash;18 months.
+      </div>
+      <div class="punchline-sub">
+        RBI inspection cycle 2025&ndash;2027 enforces 2023/2024 Master Directions. DPDP penalties now in force.
+        SEBI CSCRF attestations due for regulated entities. Pharma discovery budgets allocated annually.
+        The buyers are forming technical-evaluation panels now.
+      </div>
+    </div>
+  </div>
+</section>
+<!-- SLIDE 15 · EXECUTIVE TEAM -->
+<section class="slide" data-slide="15">
+  <div class="slide-inner">
+    <div class="slide-tag purple">Leadership</div>
+    <h2 class="slide-title">
+      50+ combined years of <span class="tl-purple">enterprise HPC</span> at global institutions.
+    </h2>
+    <p class="slide-subtitle">
+      Leadership team built or operated infrastructure at Barclays, RBS, BP, Adobe, Equinix, Bank of America,
+      American Express, Telstra, JPMC, DBS. Scientific Advisory Board chaired by Prof. Rakesh Bhatnagar
+      (National Science Chair, JNU; former VC, BHU), with Prof. Dr. Kamal Kant Dwivedi (IIT Kanpur PhD;
+      former VC Arunachal / Apeejay Stya; Min. of S&amp;T, GoI) as Vice Chairman.
+    </p>
+
+    <div class="grid-3" style="margin-bottom:1rem">
+      <div class="card purple" style="padding:1.1rem">
+        <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem">
+          <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, var(--teal), var(--orange)); display:grid; place-items:center; color:var(--bg); font-weight:800; font-size:1.05rem; flex-shrink:0">MS</div>
+          <div>
+            <div style="font-size:1rem; font-weight:700; color:var(--text); line-height:1.15">Mainaksh NP Singh</div>
+            <div style="font-size:0.68rem; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-top:0.1rem">CHIEF EXECUTIVE OFFICER</div>
+          </div>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-body); font-style:italic; margin-bottom:0.6rem">21+ yrs &middot; IT infrastructure &amp; enterprise HPC</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Education</div>
+        <div style="font-size:0.78rem; color:var(--text-body); margin-bottom:0.6rem">M.Tech, NUS Singapore &middot; B.Tech, NIT Hamirpur</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Career</div>
+        <div style="font-size:0.78rem; color:var(--text-body)">Atos &middot; Barclays &middot; RBS &middot; BP &middot; Adobe &middot; Equinix &middot; BHP &middot; DBS</div>
+      </div>
+
+      <div class="card orange" style="padding:1.1rem">
+        <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem">
+          <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, var(--orange), var(--yellow)); display:grid; place-items:center; color:var(--bg); font-weight:800; font-size:1.05rem; flex-shrink:0">PM</div>
+          <div>
+            <div style="font-size:1rem; font-weight:700; color:var(--text); line-height:1.15">Pushpinder Maan</div>
+            <div style="font-size:0.68rem; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-top:0.1rem">DIRECTOR, TECHNOLOGY DELIVERY</div>
+          </div>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-body); font-style:italic; margin-bottom:0.6rem">16+ yrs &middot; enterprise delivery, solution architecture</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Education</div>
+        <div style="font-size:0.78rem; color:var(--text-body); margin-bottom:0.6rem">Post Graduate</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Career</div>
+        <div style="font-size:0.78rem; color:var(--text-body)">Bank of America &middot; American Express</div>
+      </div>
+
+      <div class="card yellow" style="padding:1.1rem">
+        <div style="display:flex; align-items:center; gap:0.7rem; margin-bottom:0.8rem">
+          <div style="width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, var(--yellow), var(--green)); display:grid; place-items:center; color:var(--bg); font-weight:800; font-size:1.05rem; flex-shrink:0">DD</div>
+          <div>
+            <div style="font-size:1rem; font-weight:700; color:var(--text); line-height:1.15">Deepi Dhiman</div>
+            <div style="font-size:0.68rem; color:var(--yellow); font-weight:700; letter-spacing:0.1em; margin-top:0.1rem">DIRECTOR, SYSTEMS &amp; OPERATIONS</div>
+          </div>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-body); font-style:italic; margin-bottom:0.6rem">15+ yrs &middot; system architecture, HPC operations</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Education</div>
+        <div style="font-size:0.78rem; color:var(--text-body); margin-bottom:0.6rem">Graduate</div>
+        <div style="font-size:0.62rem; color:var(--text-dim); letter-spacing:0.15em; font-weight:700; text-transform:uppercase; margin-bottom:0.25rem">Career</div>
+        <div style="font-size:0.78rem; color:var(--text-body)">Telstra &middot; JPMC</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap:0.9rem">
+      <div class="card green" style="padding:1.1rem 1.3rem">
+        <div style="display:flex; align-items:center; gap:0.8rem">
+          <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--green), var(--teal)); display:grid; place-items:center; color:var(--bg); font-weight:800; font-size:1.1rem; flex-shrink:0">RB</div>
+          <div style="flex:1; min-width:0">
+            <div style="display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap">
+              <div style="font-size:1rem; font-weight:700; color:var(--text)">Prof. Rakesh Bhatnagar, PhD</div>
+              <div style="font-size:0.66rem; color:var(--green); font-weight:700; letter-spacing:0.1em">SAB CHAIR</div>
+            </div>
+            <div style="font-size:0.76rem; color:var(--text-body); font-style:italic; margin-top:0.15rem">
+              National Science Chair, JNU &middot; Former VC, BHU (2018&ndash;21) &middot; Former Dean, School of Biotechnology, JNU &middot; FNA, FASc, FNASc
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card purple" style="padding:1.1rem 1.3rem">
+        <div style="display:flex; align-items:center; gap:0.8rem">
+          <div style="width:48px; height:48px; border-radius:50%; background:linear-gradient(135deg, var(--purple), var(--teal)); display:grid; place-items:center; color:var(--bg); font-weight:800; font-size:1.05rem; flex-shrink:0">KD</div>
+          <div style="flex:1; min-width:0">
+            <div style="display:flex; align-items:baseline; gap:0.6rem; flex-wrap:wrap">
+              <div style="font-size:1rem; font-weight:700; color:var(--text)">Prof. Dr. Kamal Kant Dwivedi, PhD</div>
+              <div style="font-size:0.66rem; color:var(--purple); font-weight:700; letter-spacing:0.1em">SAB VICE CHAIR</div>
+            </div>
+            <div style="font-size:0.76rem; color:var(--text-body); font-style:italic; margin-top:0.15rem">
+              PhD IIT Kanpur 1977 &middot; former VC Arunachal &amp; Apeejay Stya &middot; Adviser, Min. of S&amp;T GoI &middot; ~200 papers
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-top:1rem">
+      <div class="bigstat"><div class="bigstat-val teal">50+ yrs</div><div class="bigstat-lbl">Combined enterprise IT</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">10+ global</div><div class="bigstat-lbl">Enterprises served</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">3 verticals</div><div class="bigstat-lbl">Operated in parallel</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">24&times;7</div><div class="bigstat-lbl">HPC operations discipline</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 16 · COMPLIANCE & CERTIFICATIONS -->
+<section class="slide" data-slide="16">
+  <div class="slide-inner">
+    <div class="slide-tag green">Compliance &amp; Certifications</div>
+    <h2 class="slide-title">
+      Three <span class="tl-green">ISO certifications</span> live. SOC 2 <span class="tl-orange">in process.</span>
+    </h2>
+    <p class="slide-subtitle">
+      All three ISO certifications achieved on <strong>27 February 2026</strong>, valid through <strong>26 February 2029</strong>, issued by <strong>Assurance Quality Certification LLC</strong>. SOC 2 Type I (5 Trust Service Criteria) audit currently under processing. This compliance posture is a <span class="tl-yellow">hard prerequisite</span> for BFSI procurement, CERT-In empanelment, and most central government grant eligibility.
+    </p>
+
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="card green" style="padding:1.1rem">
+        <div class="card-label">Information Security</div>
+        <div style="font-size:1.15rem; font-weight:800; color:var(--text); line-height:1.15; margin-bottom:0.35rem">ISO/IEC 27001:2022</div>
+        <div style="font-size:0.72rem; color:var(--green); font-weight:700; letter-spacing:0.08em; margin-bottom:0.6rem">CERT. 26UQAV11</div>
+        <div style="font-size:0.78rem; color:var(--text-body); line-height:1.5">Information Security Management System &mdash; the global benchmark for protecting customer data, IP and HPC infrastructure.</div>
+      </div>
+
+      <div class="card teal" style="padding:1.1rem; border-left-color:var(--teal)">
+        <div class="card-label" style="color:var(--teal)">Quality Management</div>
+        <div style="font-size:1.15rem; font-weight:800; color:var(--text); line-height:1.15; margin-bottom:0.35rem">ISO 9001:2015</div>
+        <div style="font-size:0.72rem; color:var(--teal); font-weight:700; letter-spacing:0.08em; margin-bottom:0.6rem">CERT. 26UQAV12</div>
+        <div style="font-size:0.78rem; color:var(--text-body); line-height:1.5">Quality Management System &mdash; documented processes, continuous improvement, customer-satisfaction discipline across all three verticals.</div>
+      </div>
+
+      <div class="card purple" style="padding:1.1rem">
+        <div class="card-label">IT Service Management</div>
+        <div style="font-size:1.15rem; font-weight:800; color:var(--text); line-height:1.15; margin-bottom:0.35rem">ISO/IEC 20000-1:2018</div>
+        <div style="font-size:0.72rem; color:var(--purple); font-weight:700; letter-spacing:0.08em; margin-bottom:0.6rem">CERT. 26UITAH14</div>
+        <div style="font-size:0.78rem; color:var(--text-body); line-height:1.5">IT Service Management System &mdash; SLA discipline, change management, incident response. Required for managed-services contracts with PSUs and BFSI.</div>
+      </div>
+
+      <div class="card orange" style="padding:1.1rem">
+        <div class="card-label">Trust Services</div>
+        <div style="font-size:1.15rem; font-weight:800; color:var(--text); line-height:1.15; margin-bottom:0.35rem">SOC 2 Type I</div>
+        <div style="font-size:0.72rem; color:var(--orange); font-weight:700; letter-spacing:0.08em; margin-bottom:0.6rem">UNDER PROCESSING &middot; 5 TSCs</div>
+        <div style="font-size:0.78rem; color:var(--text-body); line-height:1.5">All five Trust Service Criteria: Security, Availability, Processing Integrity, Confidentiality, Privacy. Type II to follow.</div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap:0.9rem; margin-bottom:1rem">
+      <div class="card yellow" style="padding:1rem 1.2rem">
+        <div class="card-label">Why this matters for BFSI</div>
+        <div style="font-size:0.85rem; color:var(--text-body); line-height:1.55">RBI-regulated entities require ISO 27001 + SOC 2 from cyber vendors. Most Indian deep-tech startups <strong>do not have these</strong> in seed stage &mdash; they spend 12&ndash;18 months and Rs 50&ndash;80 L acquiring them post-Series A. <strong>Quisitive arrives pre-certified.</strong></div>
+      </div>
+      <div class="card teal" style="padding:1rem 1.2rem; border-left-color:var(--teal)">
+        <div class="card-label" style="color:var(--teal)">Why this matters for grants</div>
+        <div style="font-size:0.85rem; color:var(--text-body); line-height:1.55">CERT-In empanelment, MeitY SAMRIDH, BIRAC RDI, and most state CoE grants list ISO 27001 and ISO 9001 as eligibility criteria. Quisitive's certification stack <strong>materially improves win probability</strong> on every cyber and managed-services grant call.</div>
+      </div>
+    </div>
+
+    <div class="grid-4">
+      <div class="bigstat green"><div class="bigstat-val green">3 / 4</div><div class="bigstat-lbl">Certifications live</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">Q2 2026</div><div class="bigstat-lbl">SOC 2 Type I targeted</div></div>
+      <div class="bigstat teal"><div class="bigstat-val teal">3-yr cycle</div><div class="bigstat-lbl">Valid through Feb 2029</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">5 TSCs</div><div class="bigstat-lbl">Full SOC 2 scope</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 17 · USE OF FUNDS -->
+<section class="slide" data-slide="17">
+  <div class="slide-inner">
+    <div class="slide-tag">Use of Funds</div>
+    <h2 class="slide-title">
+      Where every <span class="tl-teal">Rs 1 Crore</span> goes.
+    </h2>
+    <p class="slide-subtitle">
+      Rs 26 Cr across 24 months. Not a lump sum &mdash; a capital plan with tranche milestones.
+      Every rupee tied to headcount, infrastructure, compliance, or runway reserve.
+    </p>
+
+    <div class="grid-2" style="gap:1.2rem; margin-bottom:1rem">
+      <div>
+        <div class="card-label" style="margin-bottom:0.5rem">Allocation by Bucket</div>
+        <table class="ftable">
+          <thead><tr>
+            <th style="width:55%">Bucket</th>
+            <th style="width:20%">Amount</th>
+            <th style="width:25%">% of total</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="emph">Bioinformatics vertical (18-mo)</td><td class="teal num">Rs 6.0 Cr</td><td class="num">23.1%</td></tr>
+            <tr><td class="emph">Cybersecurity vertical (24-mo)</td><td class="orange num">Rs 9.5 Cr</td><td class="num">36.5%</td></tr>
+            <tr><td class="emph">Managed Services vertical (18-mo)</td><td class="yellow num">Rs 2.5 Cr</td><td class="num">9.6%</td></tr>
+            <tr><td class="emph">Group layer (CEO + 3 VHs + shared functions)</td><td class="green num">Rs 6.6 Cr</td><td class="num">25.4%</td></tr>
+            <tr><td class="emph">Safety reserve (6-mo buffer)</td><td>Rs 1.4 Cr</td><td class="num">5.4%</td></tr>
+            <tr class="total"><td class="emph">TOTAL</td><td class="green num">Rs 26.0 Cr</td><td class="num">100%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div>
+        <div class="card-label" style="margin-bottom:0.5rem; color:var(--orange)">Headcount Build-Out</div>
+        <table class="ftable">
+          <thead><tr>
+            <th style="width:40%">Function</th>
+            <th style="width:20%">M6</th>
+            <th style="width:20%">M12</th>
+            <th style="width:20%">M24</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="emph">Bioinformatics team</td><td>3</td><td>8</td><td>11</td></tr>
+            <tr><td class="emph">Cybersecurity (engineers + GTM)</td><td>6</td><td>17</td><td>22</td></tr>
+            <tr><td class="emph">Managed Services team</td><td>5</td><td>11</td><td>14</td></tr>
+            <tr><td class="emph">Group leadership (CEO + 3 VHs)</td><td>2</td><td>4</td><td>4</td></tr>
+            <tr><td class="emph">Shared functions (CFO/Legal/HR/CS)</td><td>3</td><td>5</td><td>6</td></tr>
+            <tr class="total"><td class="emph">TOTAL FTEs</td><td class="green num">19</td><td class="green num">45</td><td class="green num">57</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="insight green">
+      <strong>Hardware is not a capital line item.</strong> Infrastructure is already deployed.
+      Rs 26 Cr goes entirely to human capital, compliance, customer acquisition, and operational reserve.
+      This is materially more capital-efficient than peer AI-native startups burning 25&ndash;40% on compute.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 18 · CAP TABLE + PHASE 0 VALUATION -->
+<section class="slide" data-slide="18">
+  <div class="slide-inner">
+    <div class="slide-tag orange">Cap Table &amp; Valuation</div>
+    <h2 class="slide-title">
+      Equity structure &mdash; <span class="tl-orange">today through Series A readiness.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Target framework below. Phase 0 pre-money to be finalized with lead investor;
+      subsequent phases price against tranche milestones. Founders retain majority through Phase 3.
+      ESOP pool of 12% created at inception, diluted pro-rata through all rounds.
+    </p>
+
+    <!-- Cap table evolution -->
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:16%">Stage</th>
+        <th style="width:12%">Raise</th>
+        <th style="width:13%">Pre-money</th>
+        <th style="width:13%">Post-money</th>
+        <th style="width:13%">Phase dilution</th>
+        <th style="width:11%">Founder</th>
+        <th style="width:11%">Investors</th>
+        <th style="width:11%">ESOP</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Incorporation</td>
+          <td class="num">&mdash;</td>
+          <td class="num">&mdash;</td>
+          <td class="num">&mdash;</td>
+          <td class="num">&mdash;</td>
+          <td class="num green">88.0%</td>
+          <td class="num">0.0%</td>
+          <td class="num">12.0%</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 0 close</td>
+          <td class="num teal">Rs 3.5 Cr</td>
+          <td class="num">Rs 20 Cr</td>
+          <td class="num">Rs 23.5 Cr</td>
+          <td class="num">14.9%</td>
+          <td class="num green">74.9%</td>
+          <td class="num teal">14.9%</td>
+          <td class="num">10.2%</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 1 close</td>
+          <td class="num teal">Rs 6.5 Cr</td>
+          <td class="num">Rs 40 Cr</td>
+          <td class="num">Rs 46.5 Cr</td>
+          <td class="num">14.0%</td>
+          <td class="num green">64.4%</td>
+          <td class="num teal">26.8%</td>
+          <td class="num">8.8%</td>
+        </tr>
+        <tr>
+          <td class="emph">Phase 2 close</td>
+          <td class="num orange">Rs 10.0 Cr</td>
+          <td class="num">Rs 70 Cr</td>
+          <td class="num">Rs 80 Cr</td>
+          <td class="num">12.5%</td>
+          <td class="num green">56.4%</td>
+          <td class="num orange">35.9%</td>
+          <td class="num">7.7%</td>
+        </tr>
+        <tr class="total">
+          <td class="emph">Phase 3 close</td>
+          <td class="num yellow">Rs 6.0 Cr</td>
+          <td class="num">Rs 110 Cr</td>
+          <td class="num">Rs 116 Cr</td>
+          <td class="num">5.2%</td>
+          <td class="num green">53.5%</td>
+          <td class="num yellow">39.3%</td>
+          <td class="num">7.3%</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Stat strip -->
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="bigstat"><div class="bigstat-val teal">Rs 20 Cr</div><div class="bigstat-lbl">Phase 0 pre-money (target)</div><div class="bigstat-sub">Negotiable with lead investor</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">39.3%</div><div class="bigstat-lbl">Total investor equity</div><div class="bigstat-sub">After Rs 26 Cr across 4 phases</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">53.5%</div><div class="bigstat-lbl">Founder retention</div><div class="bigstat-sub">Post all 4 phases, pre-Series A</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">12% &rarr; 7.3%</div><div class="bigstat-lbl">ESOP pool</div><div class="bigstat-sub">Set-aside from inception</div></div>
+    </div>
+
+    <!-- Rationale cards -->
+    <div class="grid-2" style="gap:1rem">
+      <div class="card">
+        <div class="card-label">Valuation Progression Logic</div>
+        <div class="card-title">Each phase prices against delivered milestones</div>
+        <div class="card-body">
+          <strong>Phase 0 (Rs 20 Cr pre):</strong> Rs 3.85 Cr deployed infrastructure + founding team with
+          50+ years enterprise HPC + regulatory tailwind thesis.
+          <strong>Phase 1 (Rs 40 Cr pre):</strong> GPU cluster live + 5 PhDs hired + first paid pharma pilot.
+          <strong>Phase 2 (Rs 70 Cr pre):</strong> ForgeShield/ForgeSOC GA + SOC 2 Type I + BFSI pilot signed.
+          <strong>Phase 3 (Rs 110 Cr pre):</strong> Rs 8+ Cr ARR visibility across 3 verticals + Series-A-ready.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Investor Rights Framework</div>
+        <div class="card-title">Standard Indian VC terms adjusted for tranche structure</div>
+        <div class="card-body">
+          <strong>Phase 0 lead:</strong> 1 board seat, pro-rata through Phase 3, information rights across all
+          3 subsidiaries, 1&times; non-participating liquidation preference.
+          <strong>Phase 1&ndash;2:</strong> 1 board observer at Rs 5 Cr+ cheque, tag-along rights, standard protective
+          provisions.
+          <strong>ESOP governance:</strong> Compensation committee comprising 1 investor + 1 founder director +
+          independent member (post-Phase 2).
+        </div>
+      </div>
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); font-style:italic; margin-top:0.8rem; text-align:center">
+      Target framework for discussion. Actual Phase 0 pre-money subject to lead investor terms.
+      Subsequent phase valuations indicative &mdash; to be set based on delivered milestones and market comparables at each round.
+      This is not a firm offer of securities.
+    </div>
+  </div>
+</section>
+
+
+<section class="slide" data-slide="19">
+  <div class="slide-inner">
+    <div class="slide-tag orange">Fundraising Sequence</div>
+    <h2 class="slide-title">
+      <span class="tl-orange">Four phases.</span> Each tranche de-risks the next.
+    </h2>
+    <p class="slide-subtitle">
+      No Indian seed-stage investor writes Rs 26 Cr cheques. We sequence tranches across 24 months &mdash;
+      each phase unlocked by prior traction. Managed Services goes live in Phase 0, generating revenue
+      before Phase 1 investors commit.
+    </p>
+
+    <!-- Timeline visualization -->
+    <div class="card" style="padding:1.3rem; margin-bottom:1rem">
+      <div class="card-label" style="margin-bottom:0.9rem">24-Month Timeline</div>
+      <svg viewBox="0 0 1100 210" style="width:100%; height:auto" xmlns="http://www.w3.org/2000/svg">
+        <!-- Base line -->
+        <line x1="50" y1="110" x2="1050" y2="110" stroke="#1B2A3E" stroke-width="2"/>
+
+        <!-- Phase markers -->
+        <!-- Phase 0: M0-M3 (x=50 to ~175) -->
+        <rect x="50" y="95" width="125" height="30" fill="#2EC4B6" opacity="0.9" rx="3"/>
+        <text x="112.5" y="115" text-anchor="middle" fill="#0D1B2A" font-weight="700" font-size="12">Phase 0</text>
+        <text x="112.5" y="72" text-anchor="middle" fill="#2EC4B6" font-weight="700" font-size="14">Rs 3.5 Cr</text>
+        <text x="112.5" y="58" text-anchor="middle" fill="#B8C4D4" font-size="10">Founder + F&amp;F</text>
+        <text x="112.5" y="152" text-anchor="middle" fill="#7E8C9F" font-size="10">M0&ndash;M3</text>
+        <text x="112.5" y="168" text-anchor="middle" fill="#D6DEE8" font-size="10" font-style="italic">Holding co + MS live</text>
+
+        <!-- Phase 1: M2-M8 (overlap) -->
+        <rect x="125" y="130" width="250" height="30" fill="#F4B942" opacity="0.9" rx="3"/>
+        <text x="250" y="150" text-anchor="middle" fill="#0D1B2A" font-weight="700" font-size="12">Phase 1</text>
+        <text x="250" y="187" text-anchor="middle" fill="#F4B942" font-weight="700" font-size="14">Rs 6.5 Cr</text>
+        <text x="250" y="201" text-anchor="middle" fill="#B8C4D4" font-size="10">BioAngels + BIRAC</text>
+
+        <!-- Phase 2: M8-M14 -->
+        <rect x="375" y="95" width="250" height="30" fill="#FF6B35" opacity="0.9" rx="3"/>
+        <text x="500" y="115" text-anchor="middle" fill="#0D1B2A" font-weight="700" font-size="12">Phase 2</text>
+        <text x="500" y="72" text-anchor="middle" fill="#FF6B35" font-weight="700" font-size="14">Rs 10.0 Cr</text>
+        <text x="500" y="58" text-anchor="middle" fill="#B8C4D4" font-size="10">Indian cyber VCs</text>
+        <text x="500" y="152" text-anchor="middle" fill="#7E8C9F" font-size="10">M8&ndash;M14</text>
+
+        <!-- Phase 3: M14-M22 -->
+        <rect x="625" y="130" width="340" height="30" fill="#52B788" opacity="0.9" rx="3"/>
+        <text x="795" y="150" text-anchor="middle" fill="#0D1B2A" font-weight="700" font-size="12">Phase 3</text>
+        <text x="795" y="187" text-anchor="middle" fill="#52B788" font-weight="700" font-size="14">Rs 6.0 Cr</text>
+        <text x="795" y="201" text-anchor="middle" fill="#B8C4D4" font-size="10">Pro-rata + venture debt</text>
+
+        <!-- Month ticks -->
+        <g stroke="#7E8C9F" stroke-width="0.5" opacity="0.5">
+          <line x1="175" y1="108" x2="175" y2="114"/>
+          <line x1="375" y1="108" x2="375" y2="114"/>
+          <line x1="625" y1="108" x2="625" y2="114"/>
+          <line x1="965" y1="108" x2="965" y2="114"/>
+        </g>
+        <text x="175" y="178" text-anchor="middle" fill="#7E8C9F" font-size="9">M3</text>
+        <text x="375" y="178" text-anchor="middle" fill="#7E8C9F" font-size="9">M8</text>
+        <text x="625" y="178" text-anchor="middle" fill="#7E8C9F" font-size="9">M14</text>
+        <text x="965" y="178" text-anchor="middle" fill="#7E8C9F" font-size="9">M22</text>
+      </svg>
+    </div>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:20%">Phase</th>
+        <th style="width:14%">Ask</th>
+        <th style="width:30%">Unlock criteria</th>
+        <th style="width:36%">Gate to next phase</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="emph">Phase 0 &middot; Foundation</td><td class="teal num">Rs 3.5 Cr</td><td>Founder equity + 2&ndash;3 angels + SISFS grant + F&amp;F</td><td>Managed Services revenue &gt; Rs 4 L/mo by Month 4</td></tr>
+        <tr><td class="emph">Phase 1 &middot; Bioinformatics</td><td class="teal num">Rs 6.5 Cr</td><td>BIRAC RDI + BioAngels/IAN lead + 2&ndash;3 HNI angels</td><td>2 paid pilot customers + GPU cluster installed</td></tr>
+        <tr><td class="emph">Phase 2 &middot; Cybersecurity</td><td class="orange num">Rs 10.0 Cr</td><td>Peak XV / Elevation / Lightspeed lead; or Fortinet/TCS strategic</td><td>1&ndash;2 signed BFSI pilots by Month 12; SOC 2 Type I</td></tr>
+        <tr><td class="emph">Phase 3 &middot; Bridge</td><td class="yellow num">Rs 6.0 Cr</td><td>Existing investor pro-rata + venture debt OR new Series A lead</td><td>Rs 8+ Cr ARR visibility across 3 verticals</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- SLIDE 19 · FUNDRAISING SEQUENCE -->
+<section class="slide" data-slide="20">
+  <div class="slide-inner">
+    <div class="slide-tag green">Milestones</div>
+    <h2 class="slide-title">
+      What each <span class="tl-green">tranche</span> buys us.
+    </h2>
+    <p class="slide-subtitle">
+      Every rupee is tied to a measurable outcome. Investors can audit progress quarterly against
+      these milestones. Missed milestones trigger tranche review.
+    </p>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:14%">Timeline</th>
+        <th style="width:22%">Bioinformatics</th>
+        <th style="width:22%">Cybersecurity</th>
+        <th style="width:22%">Managed Services</th>
+        <th style="width:20%">Group</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">M0&ndash;M3</td>
+          <td>VH-Bio recruited; GPU cluster ordered</td>
+          <td>&mdash;</td>
+          <td class="yellow">First 3 paid MSP customers; Rs 4 L MRR</td>
+          <td>Holding co incorporated; CEO + CFO onboard</td>
+        </tr>
+        <tr>
+          <td class="emph">M4&ndash;M8</td>
+          <td class="teal">5 PhDs hired; GPU live; first paid pilot</td>
+          <td>VH-Cyber recruited; 3 senior engineers hired</td>
+          <td class="yellow">Rs 8&ndash;10 L MRR; 8&ndash;12 customers</td>
+          <td>CFO, HR, CS, legal all in place</td>
+        </tr>
+        <tr>
+          <td class="emph">M9&ndash;M14</td>
+          <td class="teal">3 paid pilots; Rs 30&ndash;45 L/Q revenue</td>
+          <td class="orange">ForgeShield v1.0 + ForgeSOC v1.0 GA; first BFSI pilot</td>
+          <td class="yellow">Rs 12&ndash;15 L MRR; breakeven reached</td>
+          <td>Series A prep materials; audit trail</td>
+        </tr>
+        <tr>
+          <td class="emph">M15&ndash;M20</td>
+          <td class="teal">Rs 1&ndash;1.5 Cr/Q revenue; 12&ndash;18 customers</td>
+          <td class="orange">SOC 2 Type I complete; 3&ndash;5 paying BFSI contracts</td>
+          <td class="yellow">Rs 22&ndash;32 L MRR; 25&ndash;35 customers</td>
+          <td>Series A conversations active</td>
+        </tr>
+        <tr>
+          <td class="emph">M21&ndash;M24</td>
+          <td class="teal">Rs 2+ Cr/Q revenue; 20+ customers</td>
+          <td class="orange">Rs 4 Cr ARR; 8&ndash;12 customers</td>
+          <td class="yellow">Rs 35&ndash;45 L MRR; 40&ndash;55 customers</td>
+          <td>Series A closed or in close; Rs 8+ Cr ARR</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight green" style="margin-top:1rem">
+      <strong>Milestone discipline:</strong> Every quarter, Quisitive reports variance against this grid
+      to investors. A vertical missing its quarterly milestone by &gt;25% triggers a tranche-reallocation
+      review. Over-performing verticals get bridge capital from the safety reserve.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 20 · TRANCHE MILESTONES -->
+<section class="slide" data-slide="21">
+  <div class="slide-inner">
+    <div class="slide-tag red">Honest Risks</div>
+    <h2 class="slide-title">
+      The five things that could <span class="tl-red">break this plan</span> &mdash; and how we mitigate.
+    </h2>
+    <p class="slide-subtitle">
+      We don&rsquo;t hide risks. Investors who care about these answers are the investors we want on our cap table.
+    </p>
+
+    <table class="ftable">
+      <thead><tr>
+        <th style="width:24%">Risk</th>
+        <th style="width:10%">Severity</th>
+        <th style="width:10%">Probability</th>
+        <th style="width:56%">Mitigation</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Founder bandwidth &mdash; one CEO cannot directly operate 3 verticals</td>
+          <td class="red">High</td>
+          <td class="red">Medium</td>
+          <td>Three Vertical Heads, each with P&amp;L ownership and ESOP. Group CEO role is allocation + fundraising + group governance, not operational. VH-MS hired in Phase 0 before vertical scale requires it.</td>
+        </tr>
+        <tr>
+          <td class="emph">BFSI sales cycles slip from 12-18 mo to 18-24 mo</td>
+          <td class="red">High</td>
+          <td>Medium</td>
+          <td>Phase 2 includes Rs 1.4 Cr safety reserve for 6-month cushion. Mid-market inside-sales motion (Rs 2&ndash;10 L MRR accounts) runs parallel to enterprise BFSI to de-risk timeline.</td>
+        </tr>
+        <tr>
+          <td class="emph">Hiring senior talent at Rs 2&ndash;2.5 L/mo proves infeasible</td>
+          <td class="orange">Medium</td>
+          <td>Medium</td>
+          <td>NCR talent pool depth is strong. ESOP (2% per VH; individual-contributor pool 0.1&ndash;0.3%) offers meaningful upside. Budget includes +Rs 1.5 Cr flex for salary uplift to Rs 3 L if needed for 2 critical roles.</td>
+        </tr>
+        <tr>
+          <td class="emph">Conglomerate discount on valuation</td>
+          <td class="orange">Medium</td>
+          <td class="red">High</td>
+          <td>Position as holding company with vertical subsidiaries, offer vertical-specific SPVs for investors preferring single-vertical exposure. Use Managed Services profitability as foundation credibility. Bioinformatics headlines the deck (strongest moat + scientific narrative).</td>
+        </tr>
+        <tr>
+          <td class="emph">One vertical materially under-delivers, dragging group EBITDA</td>
+          <td class="yellow">Low</td>
+          <td>Medium</td>
+          <td>Each vertical is a separate Pvt Ltd subsidiary. Underperforming vertical can be wound down or spun out without killing others. Group cashflow subsidizes only via explicit inter-company agreement, not implicit cross-subsidy.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="insight orange" style="margin-top:1rem">
+      <strong>What we&rsquo;ve deliberately chosen not to insure against:</strong> A regulatory environment reversal
+      (e.g. DPDP Act partially rolled back) or a hyperscaler price-war in India. Both are sector-wide
+      risks for every Indian HPC/sovereign-cloud thesis &mdash; not specific to Quisitive.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 21 · RISKS & MITIGATIONS -->
+<section class="slide" data-slide="22">
+  <div class="slide-inner">
+    <div class="slide-tag yellow">Exit Opportunities</div>
+    <h2 class="slide-title">
+      Three distinct exit paths. <span class="tl-yellow">One per vertical.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Because each vertical is its own subsidiary with its own P&amp;L, Quisitive Group is structurally
+      flexible. Verticals can be spun out, sold independently, or rolled into Series A as combined entity.
+      Investor outcomes align per vertical exposure.
+    </p>
+
+    <div class="grid-3" style="margin-bottom:1rem">
+      <div class="card">
+        <div class="card-label">Bioinformatics &middot; 2028&ndash;2030</div>
+        <div class="card-title">Strategic to Indian pharma / global CRDMO</div>
+        <div class="card-body">
+          <strong>Likely acquirers:</strong> Syngene, Aragen, Piramal Pharma Solutions, Curia, Charles River.
+          <strong>Comparable deals:</strong> Syngene IPO 2015 (Rs 5,500 Cr mcap); Aragen PE deal 2021
+          ($500M valuation). <strong>Revenue multiple:</strong> 6&ndash;10&times; ARR for specialty CRO + in-silico capability.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Cybersecurity &middot; 2028&ndash;2031</div>
+        <div class="card-title">Strategic to US cyber majors or Indian IT services</div>
+        <div class="card-body">
+          <strong>Likely acquirers:</strong> Fortinet, Palo Alto, CrowdStrike, TCS Cyber, Infosys,
+          HCL Cybersecurity. <strong>Comparable deals:</strong> Safe Security $50M raise 2022;
+          Lucideus series C. <strong>Revenue multiple:</strong> 10&ndash;20&times; ARR for AI-native cyber with BFSI traction.
+        </div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Managed Services &middot; 2029+</div>
+        <div class="card-title">Roll-up target for Indian DC consolidator</div>
+        <div class="card-body">
+          <strong>Likely acquirers:</strong> Yotta Infrastructure, NxtGen, Sify Technologies,
+          CtrlS. <strong>Profile:</strong> steady cash-generating asset; acquired at EBITDA multiple
+          (8&ndash;15&times;) rather than revenue multiple. Cleanest exit mathematically.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2" style="gap:1rem">
+      <div class="card green">
+        <div class="card-label">Aggregate Series A (2027&ndash;2028)</div>
+        <div class="card-title">Group-level Series A at Rs 200&ndash;400 Cr valuation</div>
+        <div class="card-body">
+          Based on Rs 20&ndash;30 Cr Y3 revenue at 10&ndash;15&times; multiple plus data-sovereignty premium.
+          Investor list would include growth-stage Indian funds (Accel, Matrix, Nexus) or global
+          secondaries interested in regulated-industries AI thesis. Preserves all three verticals.
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-label">Why optionality matters</div>
+        <div class="card-title">Three exit paths improve investor IRR</div>
+        <div class="card-body">
+          A single-vertical startup has one exit path. Quisitive&rsquo;s structure lets investors capture
+          upside from whichever vertical catalyzes first &mdash; and preserve downside optionality on the
+          others. Historical median seed-to-exit for Indian deep-tech: 5.5 years.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 22 · EXIT OPPORTUNITIES -->
+<section class="slide" data-slide="23">
+  <div class="slide-inner">
+    <div class="slide-tag">One Page &middot; The Numbers</div>
+    <h2 class="slide-title">
+      Everything quantitative on <span class="tl-teal">one slide.</span>
+    </h2>
+    <p class="slide-subtitle">
+      If you forget everything else from this deck, remember these numbers.
+    </p>
+
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="bigstat"><div class="bigstat-val teal">Rs 26 Cr</div><div class="bigstat-lbl">Total capital ask</div><div class="bigstat-sub">Over 24 months, 4 phases</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">Rs 3.85 Cr</div><div class="bigstat-lbl">Already deployed</div><div class="bigstat-sub">HPC operational today</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">3 verticals</div><div class="bigstat-lbl">Under one holding co</div><div class="bigstat-sub">Each P&amp;L independent</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">50+ FTEs</div><div class="bigstat-lbl">By Month 12</div><div class="bigstat-sub">Rs 1 L/mo salary floor</div></div>
+    </div>
+
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:30%">Rs Crore</th>
+        <th style="width:17%">Year 1</th>
+        <th style="width:17%">Year 2</th>
+        <th style="width:17%">Year 3</th>
+        <th style="width:19%">Y1-Y3 Cumulative</th>
+      </tr></thead>
+      <tbody>
+        <tr><td class="emph">Bioinformatics revenue</td><td class="num">0.7</td><td class="num">2.5</td><td class="num">6.0</td><td class="num teal">9.2</td></tr>
+        <tr><td class="emph">Cybersecurity revenue (ARR)</td><td class="num">0.5</td><td class="num">4.0</td><td class="num">8.5</td><td class="num orange">13.0</td></tr>
+        <tr><td class="emph">Managed Services revenue</td><td class="num">0.8</td><td class="num">3.2</td><td class="num">5.8</td><td class="num yellow">9.8</td></tr>
+        <tr class="total"><td class="emph">TOTAL REVENUE</td><td class="num green">2.0</td><td class="num green">9.7</td><td class="num green">20.3</td><td class="num green">32.0</td></tr>
+        <tr><td class="emph">EBITDA</td><td class="num red">(8.9)</td><td class="num red">(5.4)</td><td class="num green">+1.0</td><td class="num red">(13.3)</td></tr>
+        <tr><td class="emph">EBITDA margin</td><td class="num">n/m</td><td class="num red">(56%)</td><td class="num green">+5%</td><td class="num">&mdash;</td></tr>
+        <tr><td class="emph">Customers</td><td class="num">13&ndash;26</td><td class="num">43&ndash;75</td><td class="num">105&ndash;165</td><td class="num green">105&ndash;165</td></tr>
+        <tr><td class="emph">Headcount (EoY)</td><td class="num">35&ndash;45</td><td class="num">50&ndash;60</td><td class="num">60&ndash;75</td><td class="num green">60&ndash;75</td></tr>
+      </tbody>
+    </table>
+
+    <div class="grid-4">
+      <div class="bigstat"><div class="bigstat-val teal">5.5&ndash;7.5&times;</div><div class="bigstat-lbl">LTV / CAC blended</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">6&ndash;12 mo</div><div class="bigstat-lbl">CAC payback</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">65&ndash;78%</div><div class="bigstat-lbl">Blended gross margin</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">&lt;10%</div><div class="bigstat-lbl">Blended annual churn</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 23 · THE NUMBERS, ONE PAGE -->
+<section class="slide" data-slide="24">
+  <div class="slide-inner">
+    <div class="slide-tag green">The Year-4 Inflection</div>
+    <h2 class="slide-title">
+      What changes when <span class="tl-green">all three verticals mature together.</span>
+    </h2>
+    <p class="slide-subtitle">
+      Years 1&ndash;3 build infrastructure, team, products, customer base, compliance, and case studies.
+      Year 4 is where the compounding starts &mdash; 6 AEGIS models in production, all 6 AlgoForge products GA,
+      bioinformatics case studies published, managed services cross-sell matured.
+    </p>
+
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:22%">What matures in Year 4</th>
+        <th style="width:26%">Year 3 end-state (baseline)</th>
+        <th style="width:26%">Year 4 end-state (target)</th>
+        <th style="width:26%">Why the jump</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Cybersecurity ARR</td>
+          <td>Rs 8.5 Cr &middot; 25&ndash;40 customers</td>
+          <td class="orange">Rs 18&ndash;24 Cr &middot; 55&ndash;80 customers</td>
+          <td>AEGIS fully trained &middot; 6 products GA &middot; SOC 2 Type II complete &middot; BFSI references unlock tier-1 banks</td>
+        </tr>
+        <tr>
+          <td class="emph">Bioinformatics revenue</td>
+          <td>Rs 6 Cr &middot; 30&ndash;45 customers</td>
+          <td class="teal">Rs 11&ndash;14 Cr &middot; 60&ndash;85 customers</td>
+          <td>GPU cluster fully utilized &middot; 2&ndash;3 published case studies &middot; repeat customers expand engagements</td>
+        </tr>
+        <tr>
+          <td class="emph">Managed Services revenue</td>
+          <td>Rs 5.8 Cr &middot; 50&ndash;80 customers</td>
+          <td class="yellow">Rs 9&ndash;11 Cr &middot; 90&ndash;130 customers</td>
+          <td>Cross-sell matured &middot; AIaaS compounds &middot; enterprise SaaS hosting contracts come online</td>
+        </tr>
+        <tr class="total">
+          <td class="emph">Total group revenue</td>
+          <td>Rs 20.3 Cr</td>
+          <td class="green">Rs 38&ndash;49 Cr</td>
+          <td>~2&times; YoY growth &mdash; typical for maturing platform plays</td>
+        </tr>
+        <tr>
+          <td class="emph">EBITDA</td>
+          <td>+Rs 1.0 Cr (5%)</td>
+          <td class="green">+Rs 6&ndash;10 Cr (16&ndash;20%)</td>
+          <td>Operating leverage &mdash; new revenue falls mostly to margin on fixed team</td>
+        </tr>
+        <tr>
+          <td class="emph">Rule of 40 score</td>
+          <td>~50 (high growth, thin margin)</td>
+          <td class="green">~95&ndash;130 (growth + margin combined)</td>
+          <td>Growth 80&ndash;110% + margin 16&ndash;20% &mdash; top-decile SaaS territory</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="grid-4">
+      <div class="bigstat green"><div class="bigstat-val green">Rs 38&ndash;49 Cr</div><div class="bigstat-lbl">Y4 combined revenue</div><div class="bigstat-sub">Midpoint Rs 43.5 Cr</div></div>
+      <div class="bigstat orange"><div class="bigstat-val orange">80&ndash;110%</div><div class="bigstat-lbl">Y4 YoY growth</div><div class="bigstat-sub">Platform leverage kicks in</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">16&ndash;20%</div><div class="bigstat-lbl">Y4 EBITDA margin</div><div class="bigstat-sub">First meaningfully profitable year</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">~95&ndash;130</div><div class="bigstat-lbl">Rule of 40 score</div><div class="bigstat-sub">Top-decile SaaS territory</div></div>
+    </div>
+
+    <div class="insight green" style="margin-top:1rem">
+      <strong>Why Year 4 matters for investors:</strong> Years 1&ndash;3 are capital deployment.
+      Year 4 is where the curve bends. Growth rate stays high (80-110%)
+      <em>and</em> margin turns meaningfully positive. SaaS valuation
+      frameworks reward this combination disproportionately &mdash; the market pays premium multiples
+      for Rule-of-40 compliance, and Year 4 is our first year clearing it with margin to spare.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 24 · YEAR 4 INFLECTION -->
+<section class="slide" data-slide="25">
+  <div class="slide-inner">
+    <div class="slide-tag orange">AEGIS Economic Impact</div>
+    <h2 class="slide-title">
+      What a <span class="tl-orange">mature AEGIS engine</span> is worth to the customer.
+    </h2>
+    <p class="slide-subtitle">
+      A typical Indian BFSI SOC runs 12&ndash;20 analysts (L1/L2) on 24&times;7 shifts.
+      AEGIS automates <strong>80&ndash;90% of L1 triage workload</strong> and <strong>30&ndash;60% of L2 investigation workload</strong> &mdash;
+      combined L1+L2 workload reduction of 55&ndash;75%. Translated into Indian salary benchmarks, this is the per-customer economic case.
+    </p>
+
+    <!-- Customer SOC cost breakdown -->
+    <div class="grid-2" style="gap:1.2rem; margin-bottom:1rem">
+      <div class="card orange">
+        <div class="card-label">Typical BFSI SOC (pre-AEGIS)</div>
+        <div class="card-title">Rs 1.8&ndash;3.2 Cr annual SOC headcount cost</div>
+        <div style="margin-top:0.8rem">
+          <table class="ftable" style="font-size:0.78rem">
+            <thead><tr>
+              <th style="width:34%">Role</th>
+              <th style="width:22%">Count (24&times;7)</th>
+              <th style="width:22%">Avg salary</th>
+              <th style="width:22%">Annual</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>L1 SOC Analyst</td><td>8&ndash;12</td><td>Rs 4.5&ndash;5.3 L</td><td class="orange">Rs 0.40&ndash;0.60 Cr</td></tr>
+              <tr><td>L2 SOC Analyst</td><td>4&ndash;6</td><td>Rs 5.3&ndash;14 L</td><td class="orange">Rs 0.35&ndash;0.70 Cr</td></tr>
+              <tr><td>Shift Lead / L3</td><td>2&ndash;3</td><td>Rs 18&ndash;26 L</td><td class="orange">Rs 0.40&ndash;0.70 Cr</td></tr>
+              <tr><td>SIEM / SOAR eng</td><td>1&ndash;2</td><td>Rs 14&ndash;22 L</td><td class="orange">Rs 0.15&ndash;0.35 Cr</td></tr>
+              <tr><td>Mgmt overhead</td><td>1</td><td>Rs 35&ndash;55 L</td><td class="orange">Rs 0.40&ndash;0.55 Cr</td></tr>
+              <tr class="total"><td class="emph">Total headcount</td><td>16&ndash;24</td><td>&mdash;</td><td class="orange">Rs 1.7&ndash;2.9 Cr</td></tr>
+              <tr><td>+ Attrition/training (~15%)</td><td></td><td></td><td class="orange">Rs 0.25&ndash;0.45 Cr</td></tr>
+              <tr class="total"><td class="emph">All-in annual</td><td></td><td></td><td class="orange">Rs 1.95&ndash;3.35 Cr</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-dim); font-style:italic; margin-top:0.6rem">
+          Sources: Glassdoor / Indeed India April 2026 &middot; industry BFSI SOC staffing ratios
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Post-AEGIS &middot; BFSI SOC</div>
+        <div class="card-title">Rs 0.8&ndash;1.4 Cr annual SOC headcount cost</div>
+        <div style="margin-top:0.8rem">
+          <table class="ftable" style="font-size:0.78rem">
+            <thead><tr>
+              <th style="width:34%">Role</th>
+              <th style="width:22%">Count</th>
+              <th style="width:22%">Avg salary</th>
+              <th style="width:22%">Annual</th>
+            </tr></thead>
+            <tbody>
+              <tr><td>L1 (AEGIS-augmented)</td><td>2&ndash;3</td><td>Rs 5.0 L</td><td class="teal">Rs 0.10&ndash;0.15 Cr</td></tr>
+              <tr><td>L2 / Investigators</td><td>2&ndash;3</td><td>Rs 10 L</td><td class="teal">Rs 0.20&ndash;0.30 Cr</td></tr>
+              <tr><td>Shift Lead / L3</td><td>2</td><td>Rs 22 L</td><td class="teal">Rs 0.40&ndash;0.45 Cr</td></tr>
+              <tr><td>Platform engineer</td><td>1</td><td>Rs 18 L</td><td class="teal">Rs 0.15&ndash;0.20 Cr</td></tr>
+              <tr><td>Mgmt</td><td>1</td><td>Rs 35 L</td><td class="teal">Rs 0.35 Cr</td></tr>
+              <tr class="total"><td class="emph">Total headcount</td><td>8&ndash;10</td><td>&mdash;</td><td class="teal">Rs 1.20&ndash;1.45 Cr</td></tr>
+              <tr><td class="emph">+ ForgeSOC subscription</td><td></td><td></td><td class="teal">Rs 0.30&ndash;0.60 Cr</td></tr>
+              <tr class="total"><td class="emph">All-in annual</td><td></td><td></td><td class="teal">Rs 1.50&ndash;2.05 Cr</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-size:0.72rem; color:var(--text-dim); font-style:italic; margin-top:0.6rem">
+          L1/L2 capacity freed: 40&ndash;55%. Actual realized headcount reduction: 20&ndash;35% &mdash; customers
+          typically redeploy remaining staff to threat hunting and strategic work rather than reduce rolls.
+          (Gartner 2026, Dropzone AI / Radiant Security case studies.)
+        </div>
+      </div>
+    </div>
+
+    <!-- Net savings -->
+    <div class="grid-4" style="margin-bottom:1rem">
+      <div class="bigstat orange"><div class="bigstat-val orange">Rs 0.45&ndash;1.30 Cr</div><div class="bigstat-lbl">Net annual savings per customer</div><div class="bigstat-sub">After ForgeSOC subscription</div></div>
+      <div class="bigstat"><div class="bigstat-val teal">22&ndash;38%</div><div class="bigstat-lbl">Customer TCO reduction</div><div class="bigstat-sub">vs. pre-AEGIS SOC model</div></div>
+      <div class="bigstat yellow"><div class="bigstat-val yellow">&lt;18 months</div><div class="bigstat-lbl">Customer payback period</div><div class="bigstat-sub">Most BFSI procurement threshold</div></div>
+      <div class="bigstat green"><div class="bigstat-val green">55&ndash;75%</div><div class="bigstat-lbl">Combined L1+L2 workload reduced</div><div class="bigstat-sub">L1 80&ndash;90% &middot; L2 30&ndash;60%</div></div>
+    </div>
+
+    <!-- Aggregate value extension -->
+    <div class="insight orange">
+      <strong>Aggregate value delivered by Year 4:</strong> With 55&ndash;80 cybersecurity customers paying for ForgeSOC + ForgeSentinel + ForgeShield,
+      AEGIS delivers <strong>Rs 25&ndash;100 Cr of aggregate annual cost savings to customers</strong> while
+      generating Rs 18&ndash;24 Cr of ARR for Quisitive. A 2&ndash;4&times; value-capture ratio is
+      consistent with how enterprise SaaS disruptors price against labor-replacement baselines.
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); font-style:italic; margin-top:0.8rem; text-align:center">
+      Claims are based on documented Indian SOC salary benchmarks (Glassdoor, Indeed, 6figr, April 2026) and industry-published
+      AI-SOC automation rates (Radiant Security, Dropzone AI, Gartner 2026). AEGIS reduces <em>workload</em>, not jobs &mdash;
+      customers typically realize 20&ndash;35% actual headcount reduction and redeploy the remainder to threat hunting,
+      detection engineering, and strategic initiatives.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 26 · YEAR-4 VALUATION FRAMEWORK -->
+<section class="slide" data-slide="26">
+  <div class="slide-inner">
+    <div class="slide-tag yellow">Year-4 Valuation Framework</div>
+    <h2 class="slide-title">
+      What the group is <span class="tl-yellow">worth</span> in Year 4 &mdash; by the actual comparables.
+    </h2>
+    <p class="slide-subtitle">
+      No pumped-up claims. Real revenue multiples sourced from 250+ cybersecurity and SaaS transactions
+      tracked in 2025&ndash;2026. Blended because our three verticals trade at different multiples. Honest range &mdash;
+      not a fundraise target.
+    </p>
+
+    <!-- Vertical-by-vertical valuation -->
+    <table class="ftable" style="margin-bottom:1rem">
+      <thead><tr>
+        <th style="width:20%">Vertical</th>
+        <th style="width:16%">Y4 Revenue</th>
+        <th style="width:22%">Applicable multiple</th>
+        <th style="width:22%">Comparable benchmarks</th>
+        <th style="width:20%">Implied value</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td class="emph">Cybersecurity (AEGIS &times; AlgoForge)</td>
+          <td class="num">Rs 18&ndash;24 Cr ARR</td>
+          <td class="orange">15&ndash;25&times; ARR</td>
+          <td>Private cyber median 15.2&times; &middot; AI-native premium 20-30&times; &middot; cloud security avg 21.7&times;</td>
+          <td class="orange num">Rs 270&ndash;600 Cr</td>
+        </tr>
+        <tr>
+          <td class="emph">Bioinformatics &amp; Drug Discovery</td>
+          <td class="num">Rs 11&ndash;14 Cr</td>
+          <td class="teal">6&ndash;12&times; revenue</td>
+          <td>Specialty CRO 6&ndash;9&times; &middot; AI drug discovery 8&ndash;12&times; &middot; discount if no IP portfolio yet</td>
+          <td class="teal num">Rs 66&ndash;168 Cr</td>
+        </tr>
+        <tr>
+          <td class="emph">Managed Services</td>
+          <td class="num">Rs 9&ndash;11 Cr</td>
+          <td class="yellow">3&ndash;6&times; revenue OR 8&ndash;12&times; EBITDA</td>
+          <td>Indian DC/MSP comps &middot; IT services median 1.3&times; to tech-enabled service 5-6&times;</td>
+          <td class="yellow num">Rs 27&ndash;66 Cr</td>
+        </tr>
+        <tr class="total">
+          <td class="emph">Sum-of-parts</td>
+          <td class="num">Rs 38&ndash;49 Cr</td>
+          <td colspan="2">Weighted blended: 9&ndash;17&times; group revenue</td>
+          <td class="green num">Rs 363&ndash;834 Cr</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Methodology box -->
+    <div class="grid-2" style="gap:1rem; margin-bottom:1rem">
+      <div class="card">
+        <div class="card-label">Conservative case</div>
+        <div class="card-title">Rs 400&ndash;500 Cr group valuation</div>
+        <div class="card-body">
+          Cybersecurity at 15&times; ARR (private median), bioinformatics at 7&times;,
+          managed services at 4&times;. Implies 9&ndash;11&times; blended revenue multiple &mdash;
+          below the private cyber median but credible for a multi-vertical Indian deep-tech platform.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">Base case (if Rule of 40+ holds)</div>
+        <div class="card-title">Rs 550&ndash;700 Cr group valuation</div>
+        <div class="card-body">
+          Cybersecurity at 20&times; ARR (AI-native cyber premium), bioinformatics at 10&times;,
+          managed services at 5&times; revenue OR 10&times; EBITDA. Implies 13&ndash;15&times; blended revenue
+          multiple &mdash; defensible with BFSI references and published pharma case studies.
+        </div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">Bull case (if strategic acquirer)</div>
+        <div class="card-title">Rs 750&ndash;950 Cr group valuation</div>
+        <div class="card-body">
+          Strategic acquirer pays premium for data-sovereign AI platform with BFSI lock-in.
+          Cybersecurity at 25&ndash;30&times; (M&amp;A outlier), bioinformatics at 12&times;.
+          Implies 17&ndash;20&times; blended. <strong>Not a base case</strong> &mdash; requires demonstrated
+          product-market fit &amp; 1&ndash;2 marquee BFSI reference customers.
+        </div>
+      </div>
+      <div class="card green">
+        <div class="card-label">What investors capture</div>
+        <div class="card-title">Seed-to-Year-4 return profile</div>
+        <div class="card-body">
+          Phase 0&ndash;3 investors collectively deploy Rs 26 Cr for ~40% diluted equity (target cap table).
+          At base-case Rs 600 Cr Y4 valuation, that equity block is worth <strong>Rs 240 Cr</strong> &mdash;
+          a <strong>9&times; MOIC</strong> over ~4 years, or ~70% IRR. Below-base case 6&times;. Bull case 13&times;.
+        </div>
+      </div>
+    </div>
+
+    <!-- Reality check banner -->
+    <div class="punchline">
+      <div class="punchline-val">
+        <span class="hi">Base case: 9&ndash;11&times; group revenue.</span>
+        Bull case: 17&ndash;20&times; &mdash; but only with BFSI references.
+      </div>
+      <div class="punchline-sub">
+        No &ldquo;20&ndash;30&times;&rdquo; promises &mdash; that multiple applies only to pure-play AI-native cybersecurity
+        with BFSI traction, not to a diversified group. Bioinformatics and managed services trade at lower multiples,
+        which is why blended revenue multiple converges to 9&ndash;17&times;. This is the honest range.
+      </div>
+    </div>
+
+    <div style="font-size:0.72rem; color:var(--text-dim); font-style:italic; margin-top:0.8rem; text-align:center">
+      Valuation references: Finro Mid-2025 Cybersecurity Valuation Database (250 companies) &middot; FE International 2026 SaaS Valuation Report &middot;
+      Windsor Drake Q4 2025 Cybersecurity Report &middot; Eqvista SaaS Index Q1 2025 (private SaaS median 16.1&times;) &middot;
+      Druva $2B (2021), Safe Security $300M+ (2024), CloudSEK Series B2 (2024) as Indian cyber reference points.
+    </div>
+  </div>
+</section>
+
+
+<section class="slide" data-slide="27">
+  <div class="slide-inner" style="display:flex; flex-direction:column; justify-content:center; height:100%">
+    <div class="slide-tag orange">Close</div>
+    <h2 class="slide-title">
+      Let&rsquo;s build the <span class="tl-teal">sovereign compute</span> layer<br>
+      for <span class="tl-orange">Indian pharma,</span> <span class="tl-yellow">finance,</span> and <span class="tl-green">enterprise.</span>
+    </h2>
+    <p class="slide-subtitle" style="max-width:900px">
+      We are raising Rs 3.5 Cr in Phase 0 now &mdash; to stand up the holding company, onboard leadership,
+      and launch Managed Services by Month 6. Committed investors gain pro-rata rights through Phase 3.
+      The full Rs 26 Cr across 24 months.
+    </p>
+
+    <div class="punchline" style="margin-bottom:1.5rem">
+      <div class="punchline-val">
+        <span class="hi">Three verticals. One infrastructure. One team.</span><br>
+        Rs 20.3 Cr Y3 revenue. Positive EBITDA.
+      </div>
+      <div class="punchline-sub">
+        Capital-efficient. Regulation-tailwind. Compliance-moated. Series-A-ready by Month 30.
+      </div>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:2rem">
+      <div class="card">
+        <div class="card-label">For lead investors</div>
+        <div class="card-title">Phase 0 allocation + pro-rata</div>
+        <div class="card-body">
+          Lead Phase 0 (Rs 3.5 Cr) gets board seat, pro-rata rights through all phases,
+          and information rights across three subsidiaries. Target close by Month 3.
+        </div>
+      </div>
+      <div class="card orange">
+        <div class="card-label">For strategic investors</div>
+        <div class="card-title">Vertical-specific SPV option</div>
+        <div class="card-body">
+          If your thesis is single-vertical (e.g. cyber-only), we can structure an SPV
+          at the subsidiary level. Preserves strategic alignment without group-level commitment.
+        </div>
+      </div>
+      <div class="card yellow">
+        <div class="card-label">For later-phase investors</div>
+        <div class="card-title">Phase 2 or Phase 3 entry</div>
+        <div class="card-body">
+          Phase 2 (Rs 10 Cr) pricing locks at post-Phase-1 valuation with revenue in place.
+          Phase 3 priced pre-Series A, typically at 10&ndash;15&times; Y3 ARR visibility multiple.
+        </div>
+      </div>
+    </div>
+
+    <div style="padding-top:1.2rem; border-top:1px solid rgba(255,255,255,0.08); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem">
+      <div>
+        <div style="font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:0.2rem">Mainaksh NP Singh</div>
+        <div style="font-size:0.78rem; color:var(--text-dim); letter-spacing:0.12em; text-transform:uppercase; font-weight:700">CEO &middot; Quisitive Group</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:0.85rem; color:var(--teal); font-weight:700">Noida &middot; Uttar Pradesh &middot; India</div>
+        <div style="font-size:0.78rem; color:var(--text-dim); margin-top:0.2rem">Confidential &middot; By invitation only</div>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem; text-align:center; font-size:0.7rem; color:var(--text-dim); letter-spacing:0.2em; text-transform:uppercase">
+      Thank you
+    </div>
+  </div>
+</section>
+
+</div> <!-- /deck -->
+
+<!-- Controls -->
+<div class="controls">
+  <button id="btnPrev" title="Previous (&larr;)">&larr;</button>
+  <div class="slide-counter"><span class="cur" id="curSlide">1</span> <span class="total">/ 27</span></div>
+  <button id="btnNext" title="Next (&rarr; / click)">&rarr;</button>
+  <span class="kb-hint">&larr; &rarr; &middot; click to advance</span>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  const curLbl = document.getElementById('curSlide');
+  const progFill = document.getElementById('progFill');
+  let cur = 0;
+
+  function show(n) {
+    n = Math.max(0, Math.min(total - 1, n));
+    slides.forEach((s, i) => s.classList.toggle('active', i === n));
+    cur = n;
+    curLbl.textContent = n + 1;
+    progFill.style.width = ((n + 1) / total * 100) + '%';
+  }
+
+  function next() { show(cur + 1); }
+  function prev() { show(cur - 1); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); next(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prev(); }
+    else if (e.key === 'Home') { e.preventDefault(); show(0); }
+    else if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+  });
+
+  document.getElementById('btnNext').addEventListener('click', (e) => { e.stopPropagation(); next(); });
+  document.getElementById('btnPrev').addEventListener('click', (e) => { e.stopPropagation(); prev(); });
+
+  // Click anywhere on the slide (but not on interactive elements) to advance
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('.controls') || e.target.closest('button') || e.target.closest('a') || e.target.closest('input') || e.target.closest('textarea')) return;
+    next();
+  });
+
+  show(0);
+</script>
+
+</body>
+</html>
